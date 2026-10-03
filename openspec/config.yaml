@@ -1,0 +1,12 @@
+schema: spec-driven
+
+context: |
+  Tiny Vite + vanilla JS app used to exercise an agentic SDD workflow.
+  Source in src/, tests colocated as *.test.js (Vitest). Every behavior in a
+  spec scenario must have a matching test. `npm run lint && npm test &&
+  npm run build` must pass before a change is considered done.
+
+rules:
+  tasks:
+    - Write the failing test for a task before the implementation (TDD)
+    - Keep each task small enough to finish in one commit
