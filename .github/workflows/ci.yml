@@ -14,6 +14,30 @@ permissions:
   contents: read
 
 jobs:
+  code-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Security & Performance Review
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          # Set to C to block merges with moderate issues
+          REVIEW_FAIL_BELOW: D
+        run: node scripts/ci-review.mjs
+
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 10
