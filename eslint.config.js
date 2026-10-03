@@ -15,4 +15,12 @@ export default [
       },
     },
   },
+  {
+    files: ["scripts/**"],
+    languageOptions: {
+      globals: {
+        process: "readonly",
+      },
+    },
+  },
 ];
