@@ -12,6 +12,7 @@ concurrency:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   code-review:
@@ -32,11 +33,20 @@ jobs:
       - run: npm ci
 
       - name: Security & Performance Review
+        id: review
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          # Set to C to block merges with moderate issues
           REVIEW_FAIL_BELOW: D
-        run: node scripts/ci-review.mjs
+        run: node scripts/ci-review.mjs | tee /tmp/review-output.txt
+
+      - name: Post review comment
+        if: always() && steps.review.outcome != 'skipped'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          BODY=$(cat /tmp/review-output.txt)
+          gh pr comment "$PR_NUMBER" --body "$(printf '### CI Code Review\n\n```\n%s\n```' "$BODY")"
 
   verify:
     runs-on: ubuntu-latest
