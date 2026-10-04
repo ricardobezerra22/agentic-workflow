@@ -31,7 +31,7 @@ export function validateTask(body: unknown): ValidationResult {
     errors.push({ field: 'title', issue: 'max_length_exceeded' })
   }
 
-  if (bodyObj.priority !== undefined) {
+  if (bodyObj.priority != null) {
     const priorityLower = (bodyObj.priority as string).toLowerCase()
     if (!VALID_PRIORITIES.includes(priorityLower as Priority)) {
       errors.push({ field: 'priority', issue: 'invalid_value' })
@@ -70,11 +70,11 @@ export function validateListParams(query: unknown): ValidationResult {
   const errors: ValidationError[] = []
   const queryObj = query as Record<string, unknown>
 
-  if (queryObj.status !== undefined && !VALID_STATUSES.includes(queryObj.status as Status)) {
+  if (queryObj.status != null && !VALID_STATUSES.includes(queryObj.status as Status)) {
     errors.push({ field: 'status', issue: 'invalid_value' })
   }
 
-  if (queryObj.priority !== undefined) {
+  if (queryObj.priority != null) {
     const priorityLower = (queryObj.priority as string).toLowerCase()
     if (!VALID_PRIORITIES.includes(priorityLower as Priority)) {
       errors.push({ field: 'priority', issue: 'invalid_value' })

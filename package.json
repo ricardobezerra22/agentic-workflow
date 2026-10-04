@@ -9,8 +9,6 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
-    "test:unit": "vitest run src/greeting",
-    "test:integration": "vitest run src/tasks",
     "test:e2e": "playwright test",
     "todo:db:init": "prisma db push"
   },

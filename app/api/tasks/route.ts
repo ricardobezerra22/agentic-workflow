@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     if (status === 'open') where.completed = false
     if (status === 'done') where.completed = true
 
-    if (priority) where.priority = priority.toLowerCase()
+    if (priority != null) where.priority = priority.toLowerCase()
 
     if (q) {
       where.OR = [
