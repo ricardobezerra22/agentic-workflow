@@ -18,9 +18,26 @@
           {
             "type": "command",
             "if": "Bash(git commit *)",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/pre-commit-gate.sh",
-            "args": [],
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/pre-commit-gathe.sh",
             "timeout": 300
+          },
+          {
+            "type": "command",
+            "if": "Bash(gh pr merge *)",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/pre-merge-gate.sh",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/post-commit-changelog.sh",
+            "timeout": 15
           }
         ]
       }

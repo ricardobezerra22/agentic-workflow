@@ -10,6 +10,7 @@ rules:
   tasks:
     - Write the failing test for a task before the implementation (TDD)
     - Keep each task small enough to finish in one commit
+    - Every new behavior must have unit + integration + e2e tests (see .claude/rules.md)
   proposal:
     - Every proposal.md must include a "## Decision Log" section
     - Each entry: "**<choice made>** — why this over <alternative>; ceiling: <known limitation>"

@@ -40,3 +40,4 @@ Copy `.env.example` to `.env` and fill in:
   in the same PR so `openspec/specs/` stays current.
 - Tests first. Do not weaken tests or lint rules to get green.
 - Never push to `main`, never edit `.github/workflows/` inside a feature branch.
+- See `.claude/rules.md` for mandatory test-type requirements (unit / integration / e2e) and PR merge criteria.
