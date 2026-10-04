@@ -17,12 +17,6 @@ interface TaskItemProps {
   isDeleting?: boolean
 }
 
-const priorityDots = {
-  high: '🔴',
-  medium: '🟡',
-  low: '⚪',
-}
-
 export function TaskItem({
   task,
   onToggleComplete,

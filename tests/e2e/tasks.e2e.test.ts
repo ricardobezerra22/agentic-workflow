@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, APIRequestContext } from '@playwright/test'
 
-async function cleanTasks(request: Parameters<Parameters<typeof test>[1]>[0]['request']) {
+async function cleanTasks(request: APIRequestContext) {
   const res = await request.get('/api/tasks')
   const { tasks } = await res.json()
   for (const task of tasks) {
