@@ -13,11 +13,11 @@ fi
 
 # Warn if integration or e2e test files are missing (not a hard block — enforces creation over time)
 # git ls-files is O(index) not O(filesystem) — much faster than find
-if ! git ls-files --cached --others --exclude-standard | grep -q '\.integration\.test\.js$'; then
-  echo "⚠  stop-gate: no integration tests found (*.integration.test.js). Add at least one per API/DB path." >&2
+if ! git ls-files --cached --others --exclude-standard | grep -qE '\.(integration\.test\.(js|ts))$'; then
+  echo "⚠  stop-gate: no integration tests found (*.integration.test.{js,ts}). Add at least one per API/DB path." >&2
 fi
-if ! git ls-files --cached --others --exclude-standard | grep -q '\.e2e\.test\.js$'; then
-  echo "⚠  stop-gate: no E2E tests found (*.e2e.test.js). Add at least one per user-facing flow." >&2
+if ! git ls-files --cached --others --exclude-standard | grep -qE '\.(e2e\.test\.(js|ts))$'; then
+  echo "⚠  stop-gate: no E2E tests found (*.e2e.test.{js,ts}). Add at least one per user-facing flow." >&2
 fi
 
 if [ ${#ISSUES[@]} -eq 0 ]; then
