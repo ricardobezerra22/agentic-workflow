@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Changed** chore: Remove archived change artifacts (`9d28206`) — 2026-10-04
 - **Changed** archive: Archive audit-and-fix-validation change (`da3f2c0`) — 2026-10-04
 - **Fixed** fix: Add null-safety guards to validation functions and route handlers (`4943c98`) — 2026-10-04
 - **Fixed** fix: Normalize priority enum to lowercase throughout app (`fe74d58`) — 2026-10-04
