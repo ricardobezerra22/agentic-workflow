@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 
-const BASE_URL = process.env.BLOG_POST_API_URL ?? "https://blog-docs-nine.vercel.app/api/posts";
+const BASE_URL =
+  process.env.BLOG_POST_API_URL ??
+  "https://blog-docs-nine.vercel.app/api/posts";
 const API_KEY = process.env.BLOG_POST_API_KEY ?? "change-me";
 
 const headers = { "Content-Type": "application/json", "x-api-key": API_KEY };
@@ -16,13 +18,15 @@ describe("blog-post E2E: deploy notification flow", () => {
       body: JSON.stringify({
         title: "Agentic Workflow — What shipped Jan 1, 2026",
         slug,
-        content: "- CI: Notify blog post API after production deploy\n- Fixed: Harden hooks",
+        content:
+          "- CI: Notify blog post API after production deploy\n- Fixed: Harden hooks",
         published: true,
         sha: "abc123",
         ref: "refs/heads/main",
         actor: "nevescomeia",
         repo: "ricardobezerra22/agentic-workflow",
-        run_url: "https://github.com/ricardobezerra22/agentic-workflow/actions/runs/1",
+        run_url:
+          "https://github.com/ricardobezerra22/agentic-workflow/actions/runs/1",
         deployed_at: "2026-01-01T00:00:00Z",
       }),
     });
@@ -41,7 +45,10 @@ describe("blog-post E2E: deploy notification flow", () => {
   });
 
   it("cleans up the test post", async () => {
-    const res = await fetch(`${BASE_URL}/${postId}`, { method: "DELETE", headers });
+    const res = await fetch(`${BASE_URL}/${postId}`, {
+      method: "DELETE",
+      headers,
+    });
     expect(res.status).toBe(204);
   });
 });

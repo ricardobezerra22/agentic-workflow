@@ -29,6 +29,17 @@ export default [
         clearTimeout: "readonly",
         URL: "readonly",
         console: "readonly",
+        fetch: "readonly",
+      },
+    },
+  },
+  {
+    files: ["tests/**"],
+    languageOptions: {
+      globals: {
+        process: "readonly",
+        fetch: "readonly",
+        console: "readonly",
       },
     },
   },
