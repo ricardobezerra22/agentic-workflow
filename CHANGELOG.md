@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Fixed** fix: Use TEST_DATABASE_URL in Prisma client for CI integration tests (`ae2b6ec`) — 2026-10-04
 - **Fixed** fix: Exclude api-routes tests from vitest (require running server) (`8e9948b`) — 2026-10-04
 - **Fixed** fix: Only load dotenv if OPENROUTER_API_KEY not already set (`040f09f`) — 2026-10-04
 - **Fixed** fix: Add database schema setup to test workflows (`7ad3f3f`) — 2026-10-04
