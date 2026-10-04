@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Docs** docs: Add comprehensive Next.js migration status and next steps (`e8d0c56`) — 2026-10-04
 - **Added** feat: Fix TypeScript config and async route params for Next.js 15+ (`5776ee7`) — 2026-10-04
 - **Added** feat: Add UI components, API routes, and page layout (`17c344a`) — 2026-10-04
 - **Added** feat: Migrate to Next.js + TypeScript + Prisma + Tailwind (`fd495a0`) — 2026-10-04
