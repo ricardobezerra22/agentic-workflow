@@ -39,7 +39,7 @@ export function FilterPopover({
   filters,
   onFilterChange,
   onClearFilters,
-}: FilterPopoverProps) {
+}: Readonly<FilterPopoverProps>) {
   const popoverRef = useRef<HTMLDivElement>(null)
   const hasActiveFilters = filters.priority !== '' || filters.q !== ''
 
@@ -83,7 +83,7 @@ export function FilterPopover({
             Status
           </label>
           <div className="flex flex-col gap-2">
-            {statusOptions.map((option) => (
+            {statusOptions.map(option => (
               <button
                 key={option.value}
                 onClick={() => {
@@ -102,16 +102,22 @@ export function FilterPopover({
         </div>
 
         <div className="border-t border-border/20 pt-4">
-          <label htmlFor="filter-priority" className="block text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">
+          <label
+            htmlFor="filter-priority"
+            className="block text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider"
+          >
             Priority
           </label>
-          <Select value={filters.priority} onValueChange={(value) => onFilterChange({ priority: value })}>
+          <Select
+            value={filters.priority}
+            onValueChange={value => onFilterChange({ priority: value })}
+          >
             <SelectTrigger id="filter-priority" className="w-full h-10 rounded-lg">
               <SelectValue placeholder="All priorities" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="">All priorities</SelectItem>
-              {priorityOptions.map((option) => (
+              {priorityOptions.map(option => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>

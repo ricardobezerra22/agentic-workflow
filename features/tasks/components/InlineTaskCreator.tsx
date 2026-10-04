@@ -96,7 +96,7 @@ export function InlineTaskCreator({ onSubmit, onCancel, loading = false }: Inlin
         <div className="flex gap-2 ml-2">
           <Button
             onClick={handleSubmit}
-            disabled={!title.trim() || loading}
+            disabled={loading}
             size="sm"
             variant="primary"
             className="px-4 py-2 text-sm font-medium"

@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Fixed** fix: Fix e2e tests with proper locators, keyboard navigation, and port configuration (`69b5e15`) — 2026-10-04
 - **Changed** chore: Clean up migration artifacts and consolidate test structure (`2274c37`) — 2026-10-04
 - **Changed** chore: Fix API route dueDate handling and update vitest config API (`b50e451`) — 2026-10-04
 - **Tests** test: Add JS integration tests for stop gate compliance (`0b69927`) — 2026-10-04

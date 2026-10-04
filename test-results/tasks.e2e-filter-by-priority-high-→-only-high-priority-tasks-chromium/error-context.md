@@ -7,7 +7,7 @@
 # Test info
 
 - Name: tasks.e2e.test.ts >> filter by priority=high → only high-priority tasks
-- Location: tests/e2e/tasks.e2e.test.ts:93:1
+- Location: tests/e2e/tasks.e2e.test.ts:96:1
 
 # Error details
 
@@ -36,23 +36,22 @@ Call log:
     - text: Filter
   - searchbox "Search tasks"
   - img
-  - checkbox "Mark \"Buy milk\" as complete"
-  - text: Buy milk medium
-  - button "Actions for task \"Buy milk\"":
-    - img
+  - text: Status
+  - button "All tasks"
+  - button "Open"
+  - button "Completed"
+  - text: Priority
+  - combobox "Priority": Low
+  - button "Clear filters"
+  - paragraph: No tasks found
+  - paragraph: Try adjusting your filters or search
 - alert
 ```
 
 # Test source
 
 ```ts
-  1   | import { test, expect } from '@playwright/test'
-  2   | 
-  3   | async function cleanTasks(request: Parameters<Parameters<typeof test>[1]>[0]['request']) {
-  4   |   const res = await request.get('/api/tasks')
-  5   |   const { tasks } = await res.json()
-  6   |   for (const task of tasks) {
-  7   |     await request.delete(`/api/tasks/${task.id}`)
+  7   |     await request.delete(`/api/tasks/${task.id}`).catch(() => {})
   8   |   }
   9   | }
   10  | 
@@ -73,7 +72,7 @@ Call log:
   25  | test('mark task complete → checkbox checked', async ({ page, request }) => {
   26  |   await request.post('/api/tasks', { data: { title: 'Complete me', priority: 'medium' } })
   27  |   await page.goto('/')
-  28  |   const checkbox = page.locator('[aria-label*="Complete me"]')
+  28  |   const checkbox = page.getByRole('checkbox', { name: /Complete me/ })
   29  |   await expect(checkbox).not.toBeChecked()
   30  |   await checkbox.click()
   31  |   await expect(checkbox).toBeChecked()
@@ -84,7 +83,7 @@ Call log:
   36  |   const { id } = await res.json()
   37  |   await request.patch(`/api/tasks/${id}`, { data: { completed: true } })
   38  |   await page.goto('/')
-  39  |   const checkbox = page.locator('[aria-label*="Already done"]')
+  39  |   const checkbox = page.getByRole('checkbox', { name: /Already done/ })
   40  |   await expect(checkbox).toBeChecked()
   41  |   await checkbox.click()
   42  |   await expect(checkbox).not.toBeChecked()
@@ -106,117 +105,129 @@ Call log:
   58  |   await page.goto('/')
   59  |   await page.hover('text=Delete me')
   60  |   await page.click('[aria-label*="Actions for task \\"Delete me\\""]')
-  61  |   await page.click('text=Delete')
-  62  |   await expect(page.locator('text=Delete me')).not.toBeVisible()
-  63  | })
-  64  | 
-  65  | // ── FILTERING ─────────────────────────────────────────────────────────────────
-  66  | 
-  67  | test('filter by status=open → only open tasks visible', async ({ page, request }) => {
-  68  |   await request.post('/api/tasks', { data: { title: 'Open task', priority: 'medium' } })
-  69  |   const res = await request.post('/api/tasks', { data: { title: 'Done task', priority: 'medium' } })
-  70  |   const { id } = await res.json()
-  71  |   await request.patch(`/api/tasks/${id}`, { data: { completed: true } })
-  72  | 
-  73  |   await page.goto('/')
-  74  |   await page.click('[aria-label="Toggle filters"]')
-  75  |   await page.click('text=Open')
-  76  |   await expect(page.locator('text=Open task')).toBeVisible()
-  77  |   await expect(page.locator('text=Done task')).not.toBeVisible()
-  78  | })
-  79  | 
-  80  | test('filter by status=done → only completed tasks visible', async ({ page, request }) => {
-  81  |   await request.post('/api/tasks', { data: { title: 'Active task', priority: 'medium' } })
-  82  |   const res = await request.post('/api/tasks', { data: { title: 'Finished task', priority: 'medium' } })
-  83  |   const { id } = await res.json()
-  84  |   await request.patch(`/api/tasks/${id}`, { data: { completed: true } })
-  85  | 
-  86  |   await page.goto('/')
-  87  |   await page.click('[aria-label="Toggle filters"]')
-  88  |   await page.click('text=Completed')
-  89  |   await expect(page.locator('text=Finished task')).toBeVisible()
-  90  |   await expect(page.locator('text=Active task')).not.toBeVisible()
-  91  | })
-  92  | 
-  93  | test('filter by priority=high → only high-priority tasks', async ({ page, request }) => {
-  94  |   await request.post('/api/tasks', { data: { title: 'Urgent task', priority: 'high' } })
-  95  |   await request.post('/api/tasks', { data: { title: 'Low task', priority: 'low' } })
-  96  | 
-  97  |   await page.goto('/')
-  98  |   await page.click('[aria-label="Toggle filters"]')
-  99  |   await page.locator('#filter-priority').click()
-  100 |   await page.click('text=High')
-> 101 |   await expect(page.locator('text=Urgent task')).toBeVisible()
+  61  |   await page.keyboard.press('ArrowDown')
+  62  |   await page.keyboard.press('Enter')
+  63  |   await expect(page.locator('text=Delete me')).not.toBeVisible()
+  64  | })
+  65  | 
+  66  | // ── FILTERING ─────────────────────────────────────────────────────────────────
+  67  | 
+  68  | test('filter by status=open → only open tasks visible', async ({ page, request }) => {
+  69  |   await request.post('/api/tasks', { data: { title: 'Open task', priority: 'medium' } })
+  70  |   const res = await request.post('/api/tasks', { data: { title: 'Done task', priority: 'medium' } })
+  71  |   const { id } = await res.json()
+  72  |   await request.patch(`/api/tasks/${id}`, { data: { completed: true } })
+  73  | 
+  74  |   await page.goto('/')
+  75  |   await page.waitForLoadState('networkidle')
+  76  |   await page.click('[aria-label="Toggle filters"]')
+  77  |   await page.click('text=Open')
+  78  |   await expect(page.locator('text=Open task')).toBeVisible()
+  79  |   await expect(page.locator('text=Done task')).not.toBeVisible()
+  80  | })
+  81  | 
+  82  | test('filter by status=done → only completed tasks visible', async ({ page, request }) => {
+  83  |   await request.post('/api/tasks', { data: { title: 'Active task', priority: 'medium' } })
+  84  |   const res = await request.post('/api/tasks', { data: { title: 'Finished task', priority: 'medium' } })
+  85  |   const { id } = await res.json()
+  86  |   await request.patch(`/api/tasks/${id}`, { data: { completed: true } })
+  87  | 
+  88  |   await page.goto('/')
+  89  |   await page.waitForLoadState('networkidle')
+  90  |   await page.click('[aria-label="Toggle filters"]')
+  91  |   await page.click('text=Completed')
+  92  |   await expect(page.locator('text=Finished task')).toBeVisible()
+  93  |   await expect(page.locator('text=Active task')).not.toBeVisible()
+  94  | })
+  95  | 
+  96  | test('filter by priority=high → only high-priority tasks', async ({ page, request }) => {
+  97  |   await request.post('/api/tasks', { data: { title: 'Urgent task', priority: 'high' } })
+  98  |   await request.post('/api/tasks', { data: { title: 'Low task', priority: 'low' } })
+  99  | 
+  100 |   await page.goto('/')
+  101 |   await page.click('[aria-label="Toggle filters"]')
+  102 |   await page.locator('#filter-priority').click()
+  103 |   await page.keyboard.press('ArrowDown')
+  104 |   await page.keyboard.press('ArrowDown')
+  105 |   await page.keyboard.press('ArrowDown')
+  106 |   await page.keyboard.press('Enter')
+> 107 |   await expect(page.locator('text=Urgent task')).toBeVisible()
       |                                                  ^ Error: expect(locator).toBeVisible() failed
-  102 |   await expect(page.locator('text=Low task')).not.toBeVisible()
-  103 | })
-  104 | 
-  105 | test('search by text (case-insensitive) → matching tasks shown', async ({ page, request }) => {
-  106 |   await request.post('/api/tasks', { data: { title: 'Buy groceries', priority: 'medium' } })
-  107 |   await request.post('/api/tasks', { data: { title: 'Call dentist', priority: 'medium' } })
-  108 | 
-  109 |   await page.goto('/')
-  110 |   await page.fill('[aria-label="Search tasks"]', 'BUY')
-  111 |   await expect(page.locator('text=Buy groceries')).toBeVisible()
-  112 |   await expect(page.locator('text=Call dentist')).not.toBeVisible()
-  113 | })
+  108 |   await expect(page.locator('text=Low task')).not.toBeVisible()
+  109 | })
+  110 | 
+  111 | test('search by text (case-insensitive) → matching tasks shown', async ({ page, request }) => {
+  112 |   await request.post('/api/tasks', { data: { title: 'Buy groceries', priority: 'medium' } })
+  113 |   await request.post('/api/tasks', { data: { title: 'Call dentist', priority: 'medium' } })
   114 | 
-  115 | test('clear filters → all tasks return', async ({ page, request }) => {
-  116 |   await request.post('/api/tasks', { data: { title: 'Task A', priority: 'high' } })
-  117 |   await request.post('/api/tasks', { data: { title: 'Task B', priority: 'low' } })
-  118 | 
-  119 |   await page.goto('/')
-  120 |   await page.click('[aria-label="Toggle filters"]')
-  121 |   await page.locator('#filter-priority').click()
-  122 |   await page.click('text=High')
-  123 |   await expect(page.locator('text=Task B')).not.toBeVisible()
+  115 |   await page.goto('/')
+  116 |   await page.fill('[aria-label="Search tasks"]', 'BUY')
+  117 |   await expect(page.locator('text=Buy groceries')).toBeVisible()
+  118 |   await expect(page.locator('text=Call dentist')).not.toBeVisible()
+  119 | })
+  120 | 
+  121 | test('clear filters → all tasks return', async ({ page, request }) => {
+  122 |   await request.post('/api/tasks', { data: { title: 'Task A', priority: 'high' } })
+  123 |   await request.post('/api/tasks', { data: { title: 'Task B', priority: 'low' } })
   124 | 
-  125 |   await page.click('text=Clear filters')
-  126 |   await expect(page.locator('text=Task A')).toBeVisible()
-  127 |   await expect(page.locator('text=Task B')).toBeVisible()
-  128 | })
-  129 | 
-  130 | // ── KEYBOARD SHORTCUTS ────────────────────────────────────────────────────────
-  131 | 
-  132 | test('press N → inline task creator opens', async ({ page }) => {
-  133 |   await page.goto('/')
-  134 |   await page.press('body', 'n')
-  135 |   await expect(page.locator('[aria-label="New task title"]')).toBeVisible()
-  136 | })
-  137 | 
-  138 | test('press Cmd+K → search input focused', async ({ page }) => {
-  139 |   await page.goto('/')
-  140 |   await page.keyboard.press('Meta+k')
-  141 |   await expect(page.locator('[aria-label="Search tasks"]')).toBeFocused()
-  142 | })
-  143 | 
-  144 | test('press Escape in creator → creator closes without creating', async ({ page }) => {
-  145 |   await page.goto('/')
-  146 |   await page.click('[aria-label="Create new task"]')
-  147 |   await expect(page.locator('[aria-label="New task title"]')).toBeVisible()
-  148 |   await page.keyboard.press('Escape')
-  149 |   await expect(page.locator('[aria-label="New task title"]')).not.toBeVisible()
-  150 | })
-  151 | 
-  152 | // ── FORM VALIDATION ───────────────────────────────────────────────────────────
-  153 | 
-  154 | test('submit empty title → does not create task', async ({ page }) => {
-  155 |   await page.goto('/')
-  156 |   const initialCount = await page.locator('[type="checkbox"]').count()
-  157 |   await page.click('[aria-label="Create new task"]')
-  158 |   await page.click('text=Save')
-  159 |   // creator remains open (title is empty, handleSubmit returns early)
-  160 |   await expect(page.locator('[aria-label="New task title"]')).toBeVisible()
-  161 |   const afterCount = await page.locator('[type="checkbox"]').count()
-  162 |   expect(afterCount).toBe(initialCount)
-  163 | })
-  164 | 
-  165 | // ── EMPTY STATE ───────────────────────────────────────────────────────────────
-  166 | 
-  167 | test('empty state shown when no tasks match filter', async ({ page }) => {
-  168 |   await page.goto('/')
-  169 |   await page.fill('[aria-label="Search tasks"]', 'xyzzy-no-match-12345')
-  170 |   await expect(page.locator('text=No tasks found')).toBeVisible()
-  171 | })
-  172 | 
+  125 |   await page.goto('/')
+  126 |   await page.click('[aria-label="Toggle filters"]')
+  127 |   await page.locator('#filter-priority').click()
+  128 |   await page.keyboard.press('ArrowDown')
+  129 |   await page.keyboard.press('ArrowDown')
+  130 |   await page.keyboard.press('ArrowDown')
+  131 |   await page.keyboard.press('Enter')
+  132 |   await expect(page.locator('text=Task B')).not.toBeVisible()
+  133 | 
+  134 |   await page.click('text=Clear filters')
+  135 |   await expect(page.locator('text=Task A')).toBeVisible()
+  136 |   await expect(page.locator('text=Task B')).toBeVisible()
+  137 | })
+  138 | 
+  139 | // ── KEYBOARD SHORTCUTS ────────────────────────────────────────────────────────
+  140 | 
+  141 | test('press N → inline task creator opens', async ({ page }) => {
+  142 |   await page.goto('/')
+  143 |   await page.waitForLoadState('networkidle')
+  144 |   await page.press('body', 'n')
+  145 |   await expect(page.locator('[aria-label="New task title"]')).toBeVisible()
+  146 | })
+  147 | 
+  148 | test('press Cmd+K → search input focused', async ({ page }) => {
+  149 |   await page.goto('/')
+  150 |   await page.waitForLoadState('networkidle')
+  151 |   const searchInput = page.locator('[aria-label="Search tasks"]')
+  152 |   await page.keyboard.press('Meta+k')
+  153 |   await expect(searchInput).toBeFocused({ timeout: 5000 })
+  154 | })
+  155 | 
+  156 | test('press Escape in creator → creator closes without creating', async ({ page }) => {
+  157 |   await page.goto('/')
+  158 |   await page.click('[aria-label="Create new task"]')
+  159 |   await expect(page.locator('[aria-label="New task title"]')).toBeVisible()
+  160 |   await page.keyboard.press('Escape')
+  161 |   await expect(page.locator('[aria-label="New task title"]')).not.toBeVisible()
+  162 | })
+  163 | 
+  164 | // ── FORM VALIDATION ───────────────────────────────────────────────────────────
+  165 | 
+  166 | test('submit empty title → does not create task', async ({ page }) => {
+  167 |   await page.goto('/')
+  168 |   const initialCount = await page.locator('[type="checkbox"]').count()
+  169 |   await page.click('[aria-label="Create new task"]')
+  170 |   await page.click('text=Save')
+  171 |   // creator remains open (title is empty, handleSubmit returns early)
+  172 |   await expect(page.locator('[aria-label="New task title"]')).toBeVisible()
+  173 |   const afterCount = await page.locator('[type="checkbox"]').count()
+  174 |   expect(afterCount).toBe(initialCount)
+  175 | })
+  176 | 
+  177 | // ── EMPTY STATE ───────────────────────────────────────────────────────────────
+  178 | 
+  179 | test('empty state shown when no tasks match filter', async ({ page }) => {
+  180 |   await page.goto('/')
+  181 |   await page.fill('[aria-label="Search tasks"]', 'xyzzy-no-match-12345')
+  182 |   await expect(page.locator('text=No tasks found')).toBeVisible()
+  183 | })
+  184 | 
 ```

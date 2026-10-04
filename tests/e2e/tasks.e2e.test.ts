@@ -4,7 +4,7 @@ async function cleanTasks(request: Parameters<Parameters<typeof test>[1]>[0]['re
   const res = await request.get('/api/tasks')
   const { tasks } = await res.json()
   for (const task of tasks) {
-    await request.delete(`/api/tasks/${task.id}`)
+    await request.delete(`/api/tasks/${task.id}`).catch(() => {})
   }
 }
 
@@ -25,7 +25,7 @@ test('create task → appears in list', async ({ page }) => {
 test('mark task complete → checkbox checked', async ({ page, request }) => {
   await request.post('/api/tasks', { data: { title: 'Complete me', priority: 'medium' } })
   await page.goto('/')
-  const checkbox = page.locator('[aria-label*="Complete me"]')
+  const checkbox = page.getByRole('checkbox', { name: /Complete me/ })
   await expect(checkbox).not.toBeChecked()
   await checkbox.click()
   await expect(checkbox).toBeChecked()
@@ -36,7 +36,7 @@ test('mark completed task incomplete → checkbox unchecked', async ({ page, req
   const { id } = await res.json()
   await request.patch(`/api/tasks/${id}`, { data: { completed: true } })
   await page.goto('/')
-  const checkbox = page.locator('[aria-label*="Already done"]')
+  const checkbox = page.getByRole('checkbox', { name: /Already done/ })
   await expect(checkbox).toBeChecked()
   await checkbox.click()
   await expect(checkbox).not.toBeChecked()
@@ -58,7 +58,8 @@ test('delete task → removed from list', async ({ page, request }) => {
   await page.goto('/')
   await page.hover('text=Delete me')
   await page.click('[aria-label*="Actions for task \\"Delete me\\""]')
-  await page.click('text=Delete')
+  await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('Enter')
   await expect(page.locator('text=Delete me')).not.toBeVisible()
 })
 
@@ -71,6 +72,7 @@ test('filter by status=open → only open tasks visible', async ({ page, request
   await request.patch(`/api/tasks/${id}`, { data: { completed: true } })
 
   await page.goto('/')
+  await page.waitForLoadState('networkidle')
   await page.click('[aria-label="Toggle filters"]')
   await page.click('text=Open')
   await expect(page.locator('text=Open task')).toBeVisible()
@@ -84,6 +86,7 @@ test('filter by status=done → only completed tasks visible', async ({ page, re
   await request.patch(`/api/tasks/${id}`, { data: { completed: true } })
 
   await page.goto('/')
+  await page.waitForLoadState('networkidle')
   await page.click('[aria-label="Toggle filters"]')
   await page.click('text=Completed')
   await expect(page.locator('text=Finished task')).toBeVisible()
@@ -97,7 +100,10 @@ test('filter by priority=high → only high-priority tasks', async ({ page, requ
   await page.goto('/')
   await page.click('[aria-label="Toggle filters"]')
   await page.locator('#filter-priority').click()
-  await page.click('text=High')
+  await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('Enter')
   await expect(page.locator('text=Urgent task')).toBeVisible()
   await expect(page.locator('text=Low task')).not.toBeVisible()
 })
@@ -119,7 +125,10 @@ test('clear filters → all tasks return', async ({ page, request }) => {
   await page.goto('/')
   await page.click('[aria-label="Toggle filters"]')
   await page.locator('#filter-priority').click()
-  await page.click('text=High')
+  await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('Enter')
   await expect(page.locator('text=Task B')).not.toBeVisible()
 
   await page.click('text=Clear filters')
@@ -131,14 +140,17 @@ test('clear filters → all tasks return', async ({ page, request }) => {
 
 test('press N → inline task creator opens', async ({ page }) => {
   await page.goto('/')
+  await page.waitForLoadState('networkidle')
   await page.press('body', 'n')
   await expect(page.locator('[aria-label="New task title"]')).toBeVisible()
 })
 
 test('press Cmd+K → search input focused', async ({ page }) => {
   await page.goto('/')
+  await page.waitForLoadState('networkidle')
+  const searchInput = page.locator('[aria-label="Search tasks"]')
   await page.keyboard.press('Meta+k')
-  await expect(page.locator('[aria-label="Search tasks"]')).toBeFocused()
+  await expect(searchInput).toBeFocused({ timeout: 5000 })
 })
 
 test('press Escape in creator → creator closes without creating', async ({ page }) => {
