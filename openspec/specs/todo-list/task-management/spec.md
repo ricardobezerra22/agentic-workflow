@@ -22,7 +22,7 @@ produce an error or duplicate objects.
 
 ### Requirement: Create task
 The system SHALL create a task when `POST /api/tasks` is called with valid data
-and SHALL return 201 with the created task object (camelCase fields).
+and SHALL return 201 with the created task object (camelCase fields). The endpoint now also accepts optional `recurrencePattern` and `recurrenceEndDate` fields.
 
 #### Scenario: Valid creation with all fields
 - **WHEN** `POST /api/tasks` is called with `title`, `description`, `priority`, and `dueDate`
@@ -60,10 +60,26 @@ and SHALL return 201 with the created task object (camelCase fields).
 - **WHEN** `POST /api/tasks` is called with a body that is not valid JSON
 - **THEN** the response is 400 with `error.code` = `"INVALID_JSON"`
 
+#### Scenario: Create with recurrence pattern
+- **WHEN** `POST /api/tasks` is called with `title`, `dueDate`, and `recurrencePattern=DAILY`
+- **THEN** the response is 201 and the created task has `recurrencePattern=DAILY`, `parentTaskId=null`
+
+#### Scenario: Create with recurrence end date
+- **WHEN** `POST /api/tasks` is called with `title`, `dueDate`, `recurrencePattern=WEEKLY`, and `recurrenceEndDate=2026-12-31`
+- **THEN** the response is 201 and the created task has `recurrencePattern=WEEKLY`, `recurrenceEndDate=2026-12-31`
+
+#### Scenario: Invalid recurrence pattern rejected
+- **WHEN** `POST /api/tasks` is called with `recurrencePattern=INVALID`
+- **THEN** the response is 400 with `error.code` = `"VALIDATION_ERROR"`
+
+#### Scenario: Recurrence without end date defaults to NONE
+- **WHEN** `POST /api/tasks` is called with `title` only and no `recurrencePattern`
+- **THEN** the created task has `recurrencePattern=NONE`
+
 ### Requirement: List tasks with filtering
 The system SHALL return tasks ordered by: open before done, then `due_date`
 ascending (nulls last), then `created_at` descending. Results SHALL be limited
-to 500. Optional query params `status`, `priority`, and `q` filter the result.
+to 500. Optional query params `status`, `priority`, and `q` filter the result. A new `recurringOnly` param filters to tasks with recurrence due today.
 
 #### Scenario: Default listing
 - **WHEN** `GET /api/tasks` is called with no params
@@ -101,6 +117,14 @@ to 500. Optional query params `status`, `priority`, and `q` filter the result.
 - **WHEN** `GET /api/tasks?priority=critical` is called
 - **THEN** the response is 400 with `error.code` = `"VALIDATION_ERROR"`
 
+#### Scenario: Filter recurring tasks created today
+- **WHEN** `GET /api/tasks?recurringOnly=true` is called on 2026-10-04
+- **THEN** only tasks with dueDate=2026-10-04 and recurrencePattern in [DAILY, WEEKLY, MONTHLY] are returned
+
+#### Scenario: Recurring filter with status combined
+- **WHEN** `GET /api/tasks?recurringOnly=true&status=open` is called
+- **THEN** only recurring tasks due today that are also open are returned
+
 ### Requirement: Get single task
 The system SHALL return a single task when `GET /api/tasks/:id` is called with
 a valid, existing numeric id.
@@ -119,7 +143,7 @@ a valid, existing numeric id.
 
 ### Requirement: Update task partially
 The system SHALL update only the fields provided in `PATCH /api/tasks/:id` and
-always set `updated_at` to the current timestamp on success.
+always set `updated_at` to the current timestamp on success. When updating `completed`, the request MAY include a `completeAction` field that determines whether to auto-create the next occurrence.
 
 #### Scenario: Partial update
 - **WHEN** `PATCH /api/tasks/:id` is called with only `title`
@@ -145,9 +169,25 @@ always set `updated_at` to the current timestamp on success.
 - **WHEN** `PATCH /api/tasks/:id` is called for an id that does not exist
 - **THEN** the response is 404 with `error.code` = `"NOT_FOUND"`
 
+#### Scenario: Mark done with complete action
+- **WHEN** `PATCH /api/tasks/:id` is called with `completed: true` and `completeAction=mark_done`
+- **THEN** the task is marked complete and if recurring, the next occurrence is auto-created
+
+#### Scenario: Skip next without completing
+- **WHEN** `PATCH /api/tasks/:id` is called with `completeAction=mark_done_skip_next` (without changing `completed`)
+- **THEN** if the task is recurring, the next occurrence is created; the current task remains unchanged
+
+#### Scenario: Invalid complete action
+- **WHEN** `PATCH /api/tasks/:id` is called with `completeAction=invalid_action`
+- **THEN** the response is 400 with `error.code` = `"VALIDATION_ERROR"`
+
+#### Scenario: Skip next on non-recurring task fails
+- **WHEN** `PATCH /api/tasks/:id` is called with `completeAction=mark_done_skip_next` on a task with recurrencePattern=NONE
+- **THEN** the response is 400 with `error.code` = `"VALIDATION_ERROR"`
+
 ### Requirement: Delete task
 The system SHALL permanently delete a task when `DELETE /api/tasks/:id` is
-called with a valid existing id, returning 204 with no body.
+called with a valid existing id, returning 204 with no body. An optional query parameter `deleteSeries` determines whether to delete only the task or the entire recurring series.
 
 #### Scenario: Successful delete
 - **WHEN** `DELETE /api/tasks/:id` is called for an existing task
@@ -156,6 +196,18 @@ called with a valid existing id, returning 204 with no body.
 #### Scenario: Non-existent task
 - **WHEN** `DELETE /api/tasks/:id` is called for an id that does not exist
 - **THEN** the response is 404 with `error.code` = `"NOT_FOUND"`
+
+#### Scenario: Delete single recurring task
+- **WHEN** `DELETE /api/tasks/:id?deleteSeries=false` is called for a task in a recurrence series
+- **THEN** only that task is deleted; parent and siblings remain
+
+#### Scenario: Delete entire series
+- **WHEN** `DELETE /api/tasks/:id?deleteSeries=true` is called for any task in a series
+- **THEN** all tasks in the series (parent and all children) are deleted
+
+#### Scenario: Delete non-recurring task ignores deleteSeries
+- **WHEN** `DELETE /api/tasks/:id?deleteSeries=true` is called for a non-recurring task
+- **THEN** the task is deleted normally; deleteSeries param has no effect
 
 ### Requirement: Date fields returned without timezone shift
 The system SHALL return `dueDate` as a `YYYY-MM-DD` string that matches the
@@ -180,3 +232,45 @@ development database is never modified by the test suite.
 #### Scenario: Tests use test database
 - **WHEN** `npm run test:todo` is run
 - **THEN** queries target the database specified by `TEST_DATABASE_URL`, not `DATABASE_URL`
+
+### Requirement: Edit recurrence series
+The system SHALL provide an endpoint to update the recurrence pattern for a task and optionally propagate changes to future tasks in the series.
+
+#### Scenario: Edit recurrence pattern
+- **WHEN** `PATCH /api/tasks/:id/recurrence` is called with `recurrencePattern=MONTHLY` and `applyToFuture=true`
+- **THEN** the current task and all future children have recurrencePattern=MONTHLY
+
+#### Scenario: Edit recurrence end date
+- **WHEN** `PATCH /api/tasks/:id/recurrence` is called with `recurrenceEndDate=2026-12-31` and `applyToFuture=true`
+- **THEN** the current task and all future children have recurrenceEndDate=2026-12-31
+
+#### Scenario: Apply to future only affects descendants
+- **WHEN** `PATCH /api/tasks/:id/recurrence` is called with a new pattern and `applyToFuture=true` on a child task
+- **THEN** only the child and its descendants are updated; siblings and parent are unchanged
+
+#### Scenario: Apply to current task only
+- **WHEN** `PATCH /api/tasks/:id/recurrence` is called with `applyToFuture=false`
+- **THEN** only the current task is updated; children retain their pattern
+
+#### Scenario: Invalid recurrence pattern rejected
+- **WHEN** `PATCH /api/tasks/:id/recurrence` is called with `recurrencePattern=INVALID`
+- **THEN** the response is 400 with `error.code` = `"VALIDATION_ERROR"`
+
+### Requirement: List tasks in a series
+The system SHALL provide an endpoint to retrieve all tasks in a recurrence series (parent and all children).
+
+#### Scenario: Get series for parent task
+- **WHEN** `GET /api/tasks/:id/series` is called on a parent task (parentTaskId=null)
+- **THEN** the response includes the parent and all descendant tasks, ordered by dueDate ascending
+
+#### Scenario: Get series for child task
+- **WHEN** `GET /api/tasks/:id/series` is called on a child task
+- **THEN** the response includes the root parent task and all descendants in the series
+
+#### Scenario: Non-existent task
+- **WHEN** `GET /api/tasks/:id/series` is called with an id that does not exist
+- **THEN** the response is 404 with `error.code` = `"NOT_FOUND"`
+
+#### Scenario: Non-recurring task returns single task
+- **WHEN** `GET /api/tasks/:id/series` is called on a non-recurring task (recurrencePattern=NONE)
+- **THEN** the response contains only that task

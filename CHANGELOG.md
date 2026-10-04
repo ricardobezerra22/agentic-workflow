@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Changed** chore: archive recurring-tasks OpenSpec change (`b146ce1`) — 2026-10-04
 - **Added** feat: implement recurring tasks API endpoints (`6fbf254`) — 2026-10-04
 - **Added** feat: add recurrence database schema and utilities (`e828745`) — 2026-10-04
 - **Added** feat: add recurring tasks proposal and specifications (`01c690a`) — 2026-10-04
