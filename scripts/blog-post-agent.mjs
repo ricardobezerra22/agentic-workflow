@@ -58,18 +58,18 @@ for await (const chunk of stream) {
   if (text) content += text;
 }
 
+const trimmed = content.trim();
 const slug = `${repo.split("/").pop()}-${date.toISOString().slice(0, 10)}`;
+// first sentence(s) up to 160 chars as excerpt
+const excerpt = trimmed.split(/(?<=[.!?])\s+/).reduce((acc, s) => acc.length < 160 ? `${acc} ${s}`.trim() : acc, "");
+
 const payload = {
   title: `${repoName} — What shipped ${dateStr}`,
   slug,
-  content: content.trim(),
+  content: trimmed,
+  excerpt,
   published: true,
-  sha: process.env.GH_SHA,
-  ref: process.env.GH_REF,
-  actor: process.env.GH_ACTOR,
-  repo,
-  run_url: `https://github.com/${repo}/actions/runs/${process.env.GH_RUN_ID}`,
-  deployed_at: deployedAt,
+  tags: [{ name: "Release", slug: "release" }],
 };
 
 const res = await fetch(BLOG_POST_API_URL, {
