@@ -58,6 +58,20 @@ for await (const chunk of stream) {
   if (text) content += text;
 }
 
+// Map CHANGELOG labels → GitFlow tag. Order matters: hotfix > release > fix > chore.
+const TAG_MAP = [
+  { pattern: /\*\*Hotfix\*\*/i,              name: "Hotfix",   slug: "hotfix"  },
+  { pattern: /\*\*Added\*\*/i,               name: "Release",  slug: "release" },
+  { pattern: /\*\*Fixed\*\*|\*\*Security\*\*/i, name: "Fix",   slug: "fix"     },
+  { pattern: /\*\*(Changed|CI|Deprecated|Removed|Docs|Style|Perf)\*\*/i, name: "Chore", slug: "chore" },
+];
+
+function deriveTagsFromChangelog(entries) {
+  const tags = TAG_MAP.filter(({ pattern }) => pattern.test(entries))
+    .map(({ name, slug }) => ({ name, slug }));
+  return tags.length ? tags : [{ name: "Release", slug: "release" }];
+}
+
 const trimmed = content.trim();
 const slug = `${repo.split("/").pop()}-${date.toISOString().slice(0, 10)}`;
 // first sentence(s) up to 160 chars as excerpt
@@ -69,7 +83,7 @@ const payload = {
   content: trimmed,
   excerpt,
   published: true,
-  tags: [{ name: "Release", slug: "release" }],
+  tags: deriveTagsFromChangelog(rawEntries),
 };
 
 const res = await fetch(BLOG_POST_API_URL, {
