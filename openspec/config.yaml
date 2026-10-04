@@ -10,3 +10,7 @@ rules:
   tasks:
     - Write the failing test for a task before the implementation (TDD)
     - Keep each task small enough to finish in one commit
+  proposal:
+    - Every proposal.md must include a "## Decision Log" section
+    - Each entry: "**<choice made>** — why this over <alternative>; ceiling: <known limitation>"
+    - At minimum one entry per non-obvious design choice (data model, auth, infra, library pick)
