@@ -1,24 +1,6 @@
-# task-management Specification
+# Spec Delta
 
-## Purpose
-
-REST API for managing personal tasks persisted in a local PostgreSQL database,
-with server-side filtering, CRUD, and completion tracking.
-
-## Requirements
-
-### Requirement: Database schema initialisation
-The system SHALL provide an idempotent `npm run todo:db:init` command that creates
-the `tasks` table and required indexes; running it multiple times MUST NOT
-produce an error or duplicate objects.
-
-#### Scenario: First run creates table
-- **WHEN** `npm run todo:db:init` is run against an empty database
-- **THEN** the `tasks` table and its indexes exist
-
-#### Scenario: Repeated run is safe
-- **WHEN** `npm run todo:db:init` is run a second time
-- **THEN** the command exits 0 with no error
+## MODIFIED Requirements
 
 ### Requirement: Create task
 The system SHALL create a task when `POST /api/tasks` is called with valid data
@@ -232,6 +214,8 @@ development database is never modified by the test suite.
 #### Scenario: Tests use test database
 - **WHEN** `npm run test:todo` is run
 - **THEN** queries target the database specified by `TEST_DATABASE_URL`, not `DATABASE_URL`
+
+## ADDED Requirements
 
 ### Requirement: Edit recurrence series
 The system SHALL provide an endpoint to update the recurrence pattern for a task and optionally propagate changes to future tasks in the series.
