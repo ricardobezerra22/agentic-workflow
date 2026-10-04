@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Changed** chore: enforce npm test on pre-commit and pre-push (`02d9809`) — 2026-10-04
 - **Fixed** fix: sync test DB schema and fix month-end recurrence bug (`5152b1e`) — 2026-10-04
 - **Changed** chore: archive recurring-tasks OpenSpec change (`b146ce1`) — 2026-10-04
 - **Added** feat: implement recurring tasks API endpoints (`6fbf254`) — 2026-10-04
