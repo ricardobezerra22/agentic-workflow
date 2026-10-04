@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
         title: (body.title as string).trim(),
         description: body.description,
         priority: (body.priority?.toLowerCase() || 'medium') as 'low' | 'medium' | 'high',
-        dueDate: body.dueDate,
+        dueDate: body.dueDate ? new Date(body.dueDate) : undefined,
       },
     })
 
