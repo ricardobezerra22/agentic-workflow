@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { TaskHeader } from './TaskHeader'
 import { InlineTaskCreator } from './InlineTaskCreator'
 import { TaskListMinimal } from './TaskListMinimal'
+import { TaskDetailDrawer } from './TaskDetailDrawer'
 import { FilterPopover } from './FilterPopover'
 import { Toast } from '@/components/ui/toast'
 import { useTaskFilters } from '@/features/tasks/hooks/useTaskFilters'
@@ -23,6 +24,7 @@ export function TasksClientRedesigned() {
   const [showFilters, setShowFilters] = useState(false)
   const [creatingLoading, setCreatingLoading] = useState(false)
   const [deletingId, setDeletingId] = useState<number | null>(null)
+  const [openTaskId, setOpenTaskId] = useState<number | null>(null)
   const [toast, setToast] = useState<{
     message: string
     type: 'default' | 'success' | 'error'
@@ -230,10 +232,29 @@ export function TasksClientRedesigned() {
             onToggleComplete={(id, completed) => handleUpdateTask(id, { completed })}
             onRename={(id, newTitle) => handleUpdateTask(id, { title: newTitle })}
             onDelete={handleDeleteTask}
+            onOpen={(id) => setOpenTaskId(id)}
             deletingId={deletingId}
           />
         </div>
       </div>
+
+      {/* Task detail drawer */}
+      {openTaskId !== null && (() => {
+        const openTask = tasks.find((t) => t.id === openTaskId)
+        if (!openTask) return null
+        return (
+          <TaskDetailDrawer
+            task={openTask}
+            onClose={() => setOpenTaskId(null)}
+            onSave={async (id, updates) => {
+              await handleUpdateTask(id, updates)
+            }}
+            onDelete={async (id) => {
+              await handleDeleteTask(id)
+            }}
+          />
+        )
+      })()}
 
       {/* Toast notification */}
       {toast && (

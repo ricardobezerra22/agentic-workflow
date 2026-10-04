@@ -14,6 +14,7 @@ interface TaskItemProps {
   onToggleComplete: (completed: boolean) => Promise<void>
   onRename: (newTitle: string) => Promise<void>
   onDelete: () => void
+  onOpen?: () => void
   isDeleting?: boolean
 }
 
@@ -22,6 +23,7 @@ export function TaskItem({
   onToggleComplete,
   onRename,
   onDelete,
+  onOpen,
   isDeleting = false,
 }: TaskItemProps) {
   const [isEditing, setIsEditing] = useState(false)
@@ -85,11 +87,31 @@ export function TaskItem({
     low: 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400',
   }
 
+  const handleRowClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement
+    if (
+      target.closest('input[type="checkbox"]') ||
+      target.closest('button') ||
+      target.closest('[role="menu"]') ||
+      isEditing
+    ) return
+    onOpen?.()
+  }
+
   return (
     <div
+      role={onOpen ? 'button' : undefined}
+      tabIndex={onOpen ? 0 : undefined}
+      onClick={handleRowClick}
+      onKeyDown={(e) => {
+        if (onOpen && (e.key === 'Enter' || e.key === ' ') && !isEditing) {
+          e.preventDefault()
+          onOpen()
+        }
+      }}
       className={`group flex items-center gap-4 px-6 py-4 border-b border-border/20 transition-all duration-200 ${
         task.completed ? 'bg-muted/30 hover:bg-muted/40' : 'hover:bg-muted/25'
-      } ${isDeleting ? 'animate-out slide-out-to-right fade-out' : 'animate-in'}`}
+      } ${isDeleting ? 'animate-out slide-out-to-right fade-out' : 'animate-in'} ${onOpen ? 'cursor-pointer' : ''}`}
     >
       {/* Checkbox */}
       <input
