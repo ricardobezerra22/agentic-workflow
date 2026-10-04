@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(200)
+  description String?
+  priority    Priority  @default(medium)
+  dueDate     DateTime? @map("due_date") @db.Date
+  completed   Boolean   @default(false)
+  completedAt DateTime? @map("completed_at") @db.Timestamp
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamp
+
+  @@map("tasks")
+}
+
+enum Priority {
+  low
+  medium
+  high
+}
