@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Fixed** fix: Add DATABASE_URL to GitHub workflows for build steps (`7e4bbdd`) — 2026-10-04
 - **Fixed** fix: Replace __dirname with import.meta.dirname in vitest config (`331c2fe`) — 2026-10-04
 - **Fixed** fix: Use explicit .env path in scripts for proper loading (`48ca600`) — 2026-10-04
 - **Fixed** fix: Add dotenv loading to all scripts for .env support (`8460888`) — 2026-10-04

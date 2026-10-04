@@ -99,6 +99,8 @@ jobs:
         run: node scripts/test-explainer.mjs /tmp/test-output.txt
 
       - name: Build
+        env:
+          DATABASE_URL: postgres://todo:todo@localhost:5432/todo_test
         run: npm run build
 
       - name: Validate OpenSpec

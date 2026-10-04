@@ -48,9 +48,14 @@ jobs:
       - name: Test
         env:
           TEST_DATABASE_URL: postgres://todo:todo@localhost:5432/todo_test
+          DATABASE_URL: postgres://todo:todo@localhost:5432/todo_test
         run: npm test
-      - run: npx vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-      - run: npx vercel build --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Build for preview
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          npx vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+          npx vercel build --token=${{ secrets.VERCEL_TOKEN }}
       - id: deploy
         run: echo "url=$(npx vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})" >> "$GITHUB_OUTPUT"
       - name: Comment preview URL
@@ -93,9 +98,14 @@ jobs:
       - name: Test
         env:
           TEST_DATABASE_URL: postgres://todo:todo@localhost:5432/todo_test
+          DATABASE_URL: postgres://todo:todo@localhost:5432/todo_test
         run: npm test
-      - run: npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-      - run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Build for production
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
       - run: npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
       - name: Notify blog post API
         env:
