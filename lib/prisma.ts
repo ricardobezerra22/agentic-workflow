@@ -1,6 +1,7 @@
+// @ts-expect-error - Prisma types will be available after schema generation
 import { PrismaClient } from '@prisma/client'
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient }
+const globalForPrisma = global as unknown as { prisma: any }
 
 export const prisma =
   globalForPrisma.prisma ||

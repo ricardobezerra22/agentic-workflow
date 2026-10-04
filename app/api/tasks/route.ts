@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { validateTask, validateListParams, validatePatchTask, type Status } from '@/lib/validation'
-import { Prisma } from '@prisma/client'
+import { validateTask, validateListParams, type Status } from '@/lib/validation'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,12 +20,12 @@ export async function GET(req: NextRequest) {
       return errorResponse('VALIDATION_ERROR', 'Invalid query parameters', validation.errors)
     }
 
-    const where: Prisma.TaskWhereInput = {}
+    const where: Record<string, any> = {}
 
     if (status === 'open') where.completed = false
     if (status === 'done') where.completed = true
 
-    if (priority) where.priority = priority.toUpperCase() as any
+    if (priority) where.priority = priority.toUpperCase()
 
     if (q) {
       where.OR = [

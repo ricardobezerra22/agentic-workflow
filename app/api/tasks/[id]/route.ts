@@ -13,9 +13,13 @@ function parseId(id: string): number | null {
   return isNaN(parsed) ? null : parsed
 }
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const id = parseId(params.id)
+    const { id: idStr } = await params
+    const id = parseId(idStr)
     if (id === null) {
       return errorResponse('INVALID_ID', 'Task ID must be a valid number', undefined, 400)
     }
@@ -28,14 +32,19 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
     return NextResponse.json(task)
   } catch (error) {
-    console.error(`GET /api/tasks/${params.id} error:`, error)
+    const { id: idStr } = await params
+    console.error(`GET /api/tasks/${idStr} error:`, error)
     return errorResponse('INTERNAL_ERROR', 'Failed to fetch task', undefined, 500)
   }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const id = parseId(params.id)
+    const { id: idStr } = await params
+    const id = parseId(idStr)
     if (id === null) {
       return errorResponse('INVALID_ID', 'Task ID must be a valid number', undefined, 400)
     }
@@ -82,7 +91,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
     return NextResponse.json(task)
   } catch (error) {
-    console.error(`PATCH /api/tasks/${params.id} error:`, error)
+    const { id: idStr } = await params
+    console.error(`PATCH /api/tasks/${idStr} error:`, error)
     if (error instanceof SyntaxError) {
       return errorResponse('INVALID_JSON', 'Request body must be valid JSON')
     }
@@ -90,9 +100,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const id = parseId(params.id)
+    const { id: idStr } = await params
+    const id = parseId(idStr)
     if (id === null) {
       return errorResponse('INVALID_ID', 'Task ID must be a valid number', undefined, 400)
     }
@@ -106,7 +120,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
 
     return new NextResponse(null, { status: 204 })
   } catch (error) {
-    console.error(`DELETE /api/tasks/${params.id} error:`, error)
+    const { id: idStr } = await params
+    console.error(`DELETE /api/tasks/${idStr} error:`, error)
     return errorResponse('INTERNAL_ERROR', 'Failed to delete task', undefined, 500)
   }
 }

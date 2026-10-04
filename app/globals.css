@@ -1,54 +1,38 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.6%;
-
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-
-    --border: 0 0% 89.8%;
-
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 217.2 91.2% 59.8%;
-    --secondary-foreground: 222.2 47.6% 11.2%;
-
-    --accent: 217.2 91.2% 59.8%;
-    --accent-foreground: 222.2 47.6% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --success: 142.3 71.8% 29.2%;
+    --background: 255 255 255;
+    --foreground: 9 9 9;
+    --border: 229 229 229;
+    --muted: 245 245 245;
+    --muted-foreground: 115 115 115;
+    --primary: 59 130 246;
+    --primary-foreground: 255 255 255;
+    --secondary: 139 92 246;
+    --secondary-foreground: 30 27 38;
+    --accent: 139 92 246;
+    --accent-foreground: 30 27 38;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
+    --success: 16 185 129;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --border: 217.2 32.6% 17.5%;
-
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 222.2 47.6% 11.2%;
-
-    --secondary: 217.2 91.2% 59.8%;
-    --secondary-foreground: 222.2 47.6% 11.2%;
-
-    --accent: 217.2 91.2% 59.8%;
-    --accent-foreground: 222.2 47.6% 11.2%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --success: 142.3 76.2% 36.3%;
+    --background: 10 10 10;
+    --foreground: 245 245 245;
+    --border: 42 42 42;
+    --muted: 31 31 31;
+    --muted-foreground: 163 163 163;
+    --primary: 59 130 246;
+    --primary-foreground: 30 27 38;
+    --secondary: 139 92 246;
+    --secondary-foreground: 30 27 38;
+    --accent: 139 92 246;
+    --accent-foreground: 30 27 38;
+    --destructive: 127 29 29;
+    --destructive-foreground: 255 255 255;
+    --success: 34 197 94;
   }
 }
 
@@ -59,17 +43,21 @@
   }
 
   body {
-    @apply min-h-screen bg-background text-foreground;
+    min-height: 100vh;
+    background-color: rgb(var(--background));
+    color: rgb(var(--foreground));
   }
 
   button:focus-visible {
-    @apply outline-none ring-2 ring-primary ring-offset-2;
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(var(--primary));
   }
 
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible {
-    @apply outline-none ring-2 ring-primary ring-offset-2;
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(var(--primary) / 0.3);
   }
 
   @media (prefers-reduced-motion: reduce) {
