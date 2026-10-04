@@ -108,7 +108,47 @@ jobs:
           GH_RUN_ID: ${{ github.run_id }}
           GH_DEPLOYED_AT: ${{ github.event.head_commit.timestamp }}
         run: |
-          curl -fsSL -X POST "$BLOG_POST_API_URL" \
-            -H "Authorization: Bearer $BLOG_POST_API_KEY" \
-            -H "Content-Type: application/json" \
-            -d "{\"sha\":\"$GH_SHA\",\"ref\":\"$GH_REF\",\"actor\":\"$GH_ACTOR\",\"repo\":\"$GH_REPO\",\"run_url\":\"https://github.com/$GH_REPO/actions/runs/$GH_RUN_ID\",\"deployed_at\":\"$GH_DEPLOYED_AT\"}"
+          python3 - <<'EOF'
+          import re, json, os, datetime
+          from urllib.request import Request, urlopen
+
+          changelog = open('CHANGELOG.md').read()
+          section = re.search(r'## \[Unreleased\](.*?)(?=\n## |\Z)', changelog, re.DOTALL)
+          entries = []
+          if section:
+              for line in section.group(1).strip().splitlines():
+                  line = line.strip().lstrip('- ')
+                  if not line:
+                      continue
+                  m = re.match(r'\*\*(.+?)\*\*\s+(?:\w+:\s+)?(.+?)\s*(?:\(`.+?`\).*)?$', line)
+                  if m:
+                      label, msg = m.group(1), m.group(2)
+                      entries.append(f'{label}: {msg[0].upper()}{msg[1:]}')
+
+          deployed_at = os.environ['GH_DEPLOYED_AT']
+          repo = os.environ['GH_REPO']
+          date = datetime.datetime.fromisoformat(deployed_at.replace('Z', '+00:00'))
+          repo_name = repo.split('/')[-1].replace('-', ' ').title()
+
+          payload = {
+              'title': f"{repo_name} — What shipped {date.strftime('%b %-d, %Y')}",
+              'slug': f"{repo.split('/')[-1]}-{date.strftime('%Y-%m-%d')}",
+              'content': '\n'.join(f'- {e}' for e in entries),
+              'published': True,
+              'sha': os.environ['GH_SHA'],
+              'ref': os.environ['GH_REF'],
+              'actor': os.environ['GH_ACTOR'],
+              'repo': repo,
+              'run_url': f"https://github.com/{repo}/actions/runs/{os.environ['GH_RUN_ID']}",
+              'deployed_at': deployed_at,
+          }
+
+          req = Request(
+              os.environ['BLOG_POST_API_URL'],
+              data=json.dumps(payload).encode(),
+              headers={'x-api-key': os.environ['BLOG_POST_API_KEY'], 'Content-Type': 'application/json'},
+              method='POST',
+          )
+          with urlopen(req) as resp:
+              print(resp.read().decode())
+          EOF

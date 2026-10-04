@@ -12,7 +12,7 @@ POST <set BLOG_POST_API_URL in GitHub Actions variables>
 ## Headers
 
 ```
-Authorization: Bearer <BLOG_POST_API_KEY>
+x-api-key: <BLOG_POST_API_KEY>
 Content-Type: application/json
 ```
 
@@ -20,6 +20,10 @@ Content-Type: application/json
 
 ```json
 {
+  "title":       "<Repo Name> — What shipped <Month D, YYYY>",
+  "slug":        "<repo-name>-<YYYY-MM-DD>",
+  "content":     "- Label: Entry\n- Label: Entry",
+  "published":   true,
   "sha":         "<full commit SHA>",
   "ref":         "refs/heads/main",
   "actor":       "<GitHub actor who triggered the run>",
@@ -29,6 +33,9 @@ Content-Type: application/json
 }
 ```
 
+`content` is built from the `## [Unreleased]` section of `CHANGELOG.md`,
+with commit SHAs and dates stripped, prefixed with their change label.
+
 ## GitHub repo setup (one-time)
 
 In **Settings → Secrets and variables → Actions**:
@@ -36,4 +43,4 @@ In **Settings → Secrets and variables → Actions**:
 | Type     | Name                | Value                        |
 |----------|---------------------|------------------------------|
 | Secret   | `BLOG_POST_API_KEY` | `change-me` (replace when ready) |
-| Variable | `BLOG_POST_API_URL` | `<your endpoint URL>`        |
+| Variable | `BLOG_POST_API_URL` | `https://blog-docs-nine.vercel.app/api/posts` |
