@@ -11,8 +11,10 @@ import { config } from 'dotenv'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
-const __dir = dirname(fileURLToPath(import.meta.url))
-config({ path: join(__dir, '..', '.env') })
+if (!process.env.OPENROUTER_API_KEY) {
+  const __dir = dirname(fileURLToPath(import.meta.url))
+  config({ path: join(__dir, '..', '.env') })
+}
 
 import { readFileSync } from "node:fs";
 import { OpenRouter } from "@openrouter/sdk";

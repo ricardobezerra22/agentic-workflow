@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Fixed** fix: Only load dotenv if OPENROUTER_API_KEY not already set (`040f09f`) — 2026-10-04
 - **Fixed** fix: Add database schema setup to test workflows (`7ad3f3f`) — 2026-10-04
 - **Fixed** fix: Add DATABASE_URL to GitHub workflows for build steps (`7e4bbdd`) — 2026-10-04
 - **Fixed** fix: Replace __dirname with import.meta.dirname in vitest config (`331c2fe`) — 2026-10-04
