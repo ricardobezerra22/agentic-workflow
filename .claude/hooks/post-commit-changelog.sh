@@ -50,5 +50,7 @@ if not inserted:
 open(path, 'w').writelines(out)
 PYEOF
 
-echo "changelog: appended entry for $HASH" >&2
+# Amend the commit to include CHANGELOG.md — shell cmds inside hooks don't re-trigger hooks
+SKIP_REVIEW=1 git add "$CHANGELOG" && SKIP_REVIEW=1 git commit --amend --no-edit --no-gpg-sign 2>/dev/null
+echo "changelog: amended commit $HASH with CHANGELOG.md entry" >&2
 exit 0
