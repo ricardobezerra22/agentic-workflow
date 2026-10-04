@@ -1,6 +1,6 @@
 'use client'
 
-import { Dialog } from '@/components/ui/dialog'
+import { LegacyDialog } from '@/components/ui/dialog'
 
 interface TaskDeleteDialogProps {
   isOpen: boolean
@@ -23,7 +23,7 @@ export function TaskDeleteDialog({
   }
 
   return (
-    <Dialog
+    <LegacyDialog
       isOpen={isOpen}
       onClose={onClose}
       title="Delete task"

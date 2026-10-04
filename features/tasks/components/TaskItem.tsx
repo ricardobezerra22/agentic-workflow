@@ -1,6 +1,12 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import type { Task } from '@/features/tasks/types'
 
 interface TaskItemProps {
@@ -143,16 +149,30 @@ export function TaskItem({
         )}
       </div>
 
-      {/* Quick delete button */}
-      <button
-        onClick={onDelete}
-        disabled={isDeleting}
-        className="px-2 py-1 text-xs text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-all disabled:opacity-50"
-        aria-label={`Delete task "${task.title}"`}
-        title="Delete task"
-      >
-        ✕
-      </button>
+      {/* Actions menu */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            className="px-1 py-0.5 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-all rounded hover:bg-muted disabled:opacity-50"
+            aria-label={`Actions for task "${task.title}"`}
+            disabled={isDeleting}
+          >
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="6" cy="12" r="1.5" />
+              <circle cx="12" cy="12" r="1.5" />
+              <circle cx="18" cy="12" r="1.5" />
+            </svg>
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" side="bottom">
+          <DropdownMenuItem onClick={() => setIsEditing(true)}>
+            Rename
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={onDelete} className="text-destructive focus:text-destructive">
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   )
 }

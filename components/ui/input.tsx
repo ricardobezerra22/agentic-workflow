@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { cn } from '@/lib/utils'
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
@@ -7,7 +8,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className = '', label, error, helperText, id, ...props }, ref) => {
+  ({ className, label, error, helperText, id, ...props }, ref) => {
     const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`
     const errorId = error ? `${inputId}-error` : undefined
 
@@ -21,11 +22,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           id={inputId}
-          className={`px-3 py-2 text-base border rounded-md transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 ${
+          className={cn(
+            'px-3 py-2 text-base border rounded-md transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
             error
               ? 'border-destructive bg-destructive/5'
-              : 'border-border bg-background hover:border-border/80'
-          } ${className}`}
+              : 'border-border bg-background hover:border-border/80',
+            className
+          )}
           aria-describedby={errorId || (helperText ? `${inputId}-helper` : undefined)}
           {...props}
         />

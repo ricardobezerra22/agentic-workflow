@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 export const metadata: Metadata = {
   title: 'Task Manager',
@@ -14,11 +15,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="bg-background text-foreground antialiased">
-        <div className="min-h-screen flex flex-col">
-          <main className="flex-1">
-            {children}
-          </main>
-        </div>
+        <TooltipProvider>
+          <div className="min-h-screen flex flex-col">
+            <main className="flex-1">
+              {children}
+            </main>
+          </div>
+        </TooltipProvider>
       </body>
     </html>
   )

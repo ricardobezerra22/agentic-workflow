@@ -1,6 +1,13 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
 import type { TaskPriority, CreateTaskInput } from '@/features/tasks/types'
 
 interface InlineTaskCreatorProps {
@@ -12,7 +19,6 @@ interface InlineTaskCreatorProps {
 export function InlineTaskCreator({ onSubmit, onCancel, loading = false }: InlineTaskCreatorProps) {
   const [title, setTitle] = useState('')
   const [priority, setPriority] = useState<TaskPriority>('medium')
-  const [showPrioritySelect, setShowPrioritySelect] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -62,55 +68,50 @@ export function InlineTaskCreator({ onSubmit, onCancel, loading = false }: Inlin
           aria-label="New task title"
         />
 
-        {/* Priority select */}
-        <div className="relative">
-          <button
-            onClick={() => setShowPrioritySelect(!showPrioritySelect)}
-            disabled={loading}
-            className="px-2.5 py-1 text-xs font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-background transition-colors disabled:opacity-50"
-            title="Set priority"
-          >
-            {priority.charAt(0).toUpperCase() + priority.slice(1)}
-          </button>
-
-          {showPrioritySelect && (
-            <div className="absolute top-full right-0 mt-1 w-32 bg-background border border-border rounded-lg shadow-lg z-50">
-              {(['low', 'medium', 'high'] as TaskPriority[]).map((p) => (
-                <button
-                  key={p}
-                  onClick={() => {
-                    setPriority(p)
-                    setShowPrioritySelect(false)
-                  }}
-                  className={`block w-full text-left px-3 py-1.5 text-xs ${
-                    priority === p
-                      ? 'bg-primary/10 text-primary font-medium'
-                      : 'text-foreground hover:bg-muted'
-                  }`}
-                >
-                  {p.charAt(0).toUpperCase() + p.slice(1)}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        {/* Priority dropdown menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              disabled={loading}
+              className="px-2.5 py-1 text-xs font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-background transition-colors disabled:opacity-50"
+              title="Set priority"
+            >
+              {priority.charAt(0).toUpperCase() + priority.slice(1)}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" side="bottom">
+            {(['low', 'medium', 'high'] as TaskPriority[]).map((p) => (
+              <DropdownMenuItem
+                key={p}
+                onClick={() => setPriority(p)}
+                className={priority === p ? 'bg-primary/10' : ''}
+              >
+                {p.charAt(0).toUpperCase() + p.slice(1)}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         {/* Save/Cancel */}
         <div className="flex gap-2">
-          <button
+          <Button
             onClick={handleSubmit}
             disabled={!title.trim() || loading}
-            className="px-3 py-1 text-xs font-medium text-primary hover:text-primary/80 disabled:opacity-50 disabled:cursor-not-allowed"
+            size="sm"
+            variant="primary"
+            className="px-3 py-1 text-xs"
           >
             Save
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={onCancel}
             disabled={loading}
-            className="px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground disabled:opacity-50"
+            size="sm"
+            variant="ghost"
+            className="px-3 py-1 text-xs"
           >
             Cancel
-          </button>
+          </Button>
         </div>
       </div>
     </div>
