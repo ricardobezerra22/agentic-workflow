@@ -7,6 +7,7 @@
  * Optional env: EXPLAINER_MODEL
  */
 
+import 'dotenv/config.js'
 import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { OpenRouter } from "@openrouter/sdk";

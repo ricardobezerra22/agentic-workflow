@@ -9,6 +9,7 @@
  *               REVIEW_MODEL      (OpenRouter model id, default nvidia nemotron free)
  */
 
+import 'dotenv/config.js'
 import { execFileSync } from "node:child_process";
 import { OpenRouter } from "@openrouter/sdk";
 

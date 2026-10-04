@@ -6,6 +6,7 @@
  * Optional env: PR_SUMMARY_MODEL
  */
 
+import 'dotenv/config.js'
 import { execFileSync } from "node:child_process";
 import { OpenRouter } from "@openrouter/sdk";
 

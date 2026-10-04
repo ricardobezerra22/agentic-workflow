@@ -7,6 +7,7 @@
  * Optional env: BLOG_POST_MODEL, GH_SHA, GH_REF, GH_ACTOR, GH_REPO, GH_RUN_ID, GH_DEPLOYED_AT
  */
 
+import 'dotenv/config.js'
 import { readFileSync } from "node:fs";
 import { OpenRouter } from "@openrouter/sdk";
 
