@@ -1,9 +1,49 @@
 import express from "express";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { readFileSync } from "node:fs";
 import tasksRouter from "./routes/tasks.js";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
+
+// Load Vite manifest for SSR (empty if dist not built yet)
+let manifest = {};
+try {
+  const manifestPath = join(__dir, "../dist/.vite/manifest.json");
+  manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+} catch {
+  // dist/ not built yet (dev/test mode) — SSR will use public/index.html fallback
+}
+
+function renderHTML() {
+  const entry = manifest["index.html"];
+  if (!entry) {
+    // Fallback: serve public/index.html if dist not built
+    try {
+      return readFileSync(join(__dir, "../public/index.html"), "utf8");
+    } catch {
+      return "<!DOCTYPE html><html><body>App not built</body></html>";
+    }
+  }
+
+  const scriptSrc = entry.file;
+  const cssFiles = entry.css ? entry.css.map((f) => `<link rel="stylesheet" href="/${f}">`).join("\n") : "";
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic Sandbox</title>
+  ${cssFiles}
+</head>
+<body>
+  <main id="app"></main>
+  <p id="farewell"></p>
+  <script type="module" src="/${scriptSrc}"></script>
+</body>
+</html>`;
+}
 
 export const app = express();
 
@@ -36,16 +76,21 @@ app.get("/api/health", (_req, res) => res.json({ ok: true }));
 
 app.use("/api/tasks", tasksRouter);
 
-// Serve static files: built frontend (dist/) + legacy public/
+// Serve static files: built frontend assets (dist/) + legacy public/
 app.use(express.static(join(__dir, "../dist")));
 app.use(express.static(join(__dir, "../public")));
 
-// SPA fallback: serve index.html for non-API routes not matching static files
+// SSR: dynamically render HTML for SPA routes
+app.get("/", (req, res) => {
+  res.type("text/html").send(renderHTML());
+});
+
+// Fallback: 404 for API, or serve generated HTML for other routes
 app.get("*", (req, res) => {
   if (req.path.startsWith("/api/")) {
     res.status(404).json({ error: "API endpoint not found" });
   } else {
-    res.sendFile(join(__dir, "../dist/index.html"));
+    res.type("text/html").send(renderHTML());
   }
 });
 
