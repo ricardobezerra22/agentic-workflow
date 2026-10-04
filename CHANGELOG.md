@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Fixed** fix: Use explicit .env path in scripts for proper loading (`48ca600`) — 2026-10-04
 - **Fixed** fix: Add dotenv loading to all scripts for .env support (`8460888`) — 2026-10-04
 - **Fixed** fix: Explicitly set outputDirectory in vercel.json for Next.js builds (`ea2dee9`) — 2026-10-04
 - **Fixed** fix: Add prisma generate to build script for Vercel compatibility (`9f46aca`) — 2026-10-04

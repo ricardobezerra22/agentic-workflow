@@ -7,7 +7,13 @@
  * Optional env: EXPLAINER_MODEL
  */
 
-import 'dotenv/config.js'
+import { config } from 'dotenv'
+import { fileURLToPath } from 'node:url'
+import { dirname, join } from 'node:path'
+
+const __dir = dirname(fileURLToPath(import.meta.url))
+config({ path: join(__dir, '..', '.env') })
+
 import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { OpenRouter } from "@openrouter/sdk";
