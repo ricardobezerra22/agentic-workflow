@@ -1,210 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Manrope:wght@400;500;600&display=swap');
 @import 'tailwindcss';
 
+/* ─── Keyframes ─── */
 @layer base {
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes fade-out {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-  }
-
-  @keyframes zoom-in {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes zoom-out {
-    from {
-      opacity: 1;
-      transform: scale(1);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-  }
-
-  @keyframes slide-in-from-top {
-    from {
-      transform: translateY(-8px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  @keyframes slide-in-from-bottom {
-    from {
-      transform: translateY(8px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  @keyframes slide-out-to-right {
-    from {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-  }
+  @keyframes fade-in    { from { opacity: 0 }                              to { opacity: 1 } }
+  @keyframes fade-out   { from { opacity: 1 }                              to { opacity: 0 } }
+  @keyframes zoom-in    { from { opacity: 0; transform: scale(0.95) }      to { opacity: 1; transform: scale(1) } }
+  @keyframes zoom-out   { from { opacity: 1; transform: scale(1) }         to { opacity: 0; transform: scale(0.95) } }
+  @keyframes slide-in-from-top    { from { transform: translateY(-8px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+  @keyframes slide-in-from-bottom { from { transform: translateY(8px);  opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+  @keyframes slide-out-to-right   { from { transform: translateX(0);    opacity: 1 } to { transform: translateX(100%); opacity: 0 } }
 
   @media (prefers-reduced-motion: no-preference) {
     @keyframes slide-in-from-right {
-      from { transform: translateX(100%); opacity: 0; }
-      to   { transform: translateX(0);    opacity: 1; }
+      from { transform: translateX(100%); opacity: 0 }
+      to   { transform: translateX(0);    opacity: 1 }
     }
   }
 }
 
+/* ─── Animation utilities ─── */
 @layer utilities {
-  .slide-in-from-right {
-    @media (prefers-reduced-motion: no-preference) {
-      animation: slide-in-from-right 0.2s ease-out;
-    }
-  }
+  .slide-in-from-right        { @media (prefers-reduced-motion: no-preference) { animation: slide-in-from-right 0.22s cubic-bezier(0.16,1,0.3,1); } }
+  .animate-in                 { animation: fade-in 0.2s ease-out; }
+  .animate-out                { animation: fade-out 0.15s ease-out; }
+  .fade-in                    { animation: fade-in 0.2s ease-out; }
+  .fade-out                   { animation: fade-out 0.15s ease-out; }
+  .zoom-in-95                 { animation: zoom-in 0.2s ease-out; }
+  .slide-in-from-top-2        { animation: slide-in-from-top 0.2s ease-out; }
+  .slide-in-from-bottom-2     { animation: slide-in-from-bottom 0.2s ease-out; }
+  .slide-in-from-bottom-3     { animation: slide-in-from-bottom 0.2s ease-out; }
+  .slide-out-to-right         { animation: slide-out-to-right 0.15s ease-out; }
 
-  .animate-in {
-    animation: fade-in 0.2s ease-out;
-  }
-
-  .animate-out {
-    animation: fade-out 0.15s ease-out;
-  }
-
-  .fade-in {
-    animation: fade-in 0.2s ease-out;
-  }
-
-  .fade-out {
-    animation: fade-out 0.15s ease-out;
-  }
-
-  .zoom-in-95 {
-    animation: zoom-in 0.2s ease-out;
-  }
-
-  .slide-in-from-top-2 {
-    animation: slide-in-from-top 0.2s ease-out;
-  }
-
-  .slide-in-from-bottom-2 {
-    animation: slide-in-from-bottom 0.2s ease-out;
-  }
-
-  .slide-in-from-bottom-3 {
-    animation: slide-in-from-bottom 0.2s ease-out;
-  }
-
-  .slide-out-to-right {
-    animation: slide-out-to-right 0.15s ease-out;
-  }
-
-  /* Notion-inspired soft shadows */
-  .shadow-notion-sm {
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.05),
-      0 1px 3px rgba(0, 0, 0, 0.05);
-  }
-
-  .shadow-notion {
-    box-shadow:
-      0 1px 3px rgba(0, 0, 0, 0.08),
-      0 4px 12px rgba(0, 0, 0, 0.06);
-  }
-
-  .shadow-notion-md {
-    box-shadow:
-      0 4px 12px rgba(0, 0, 0, 0.1),
-      0 12px 32px rgba(0, 0, 0, 0.08);
-  }
-
-  /* Notion-inspired hover elevation */
-  .hover-elevate {
-    transition:
-      box-shadow 0.2s ease-out,
-      transform 0.2s ease-out;
-  }
-
-  .hover-elevate:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    transform: translateY(-2px);
-  }
+  .shadow-notion-sm  { box-shadow: 0 1px 0 rgb(0 0 0 / 0.4), 0 2px 8px rgb(0 0 0 / 0.4); }
+  .shadow-notion     { box-shadow: 0 1px 3px rgb(0 0 0 / 0.4), 0 4px 16px rgb(0 0 0 / 0.35); }
+  .shadow-notion-md  { box-shadow: 0 4px 20px rgb(0 0 0 / 0.6), 0 16px 48px rgb(0 0 0 / 0.4); }
+  .hover-elevate     { transition: box-shadow 0.2s ease-out, transform 0.2s ease-out; }
+  .hover-elevate:hover { box-shadow: 0 8px 24px rgb(0 0 0 / 0.6); transform: translateY(-1px); }
 }
 
+/* ─── Design tokens ─── */
 @layer base {
   :root {
-    /* Notion-inspired refined palette: warm, sophisticated, minimal */
-    --background: #f9f9f7;
-    --foreground: #201f1d;
-    --border: #e1dfdc;
-    --muted: #f2f1ef;
-    --muted-foreground: #837d76;
-    --primary: #4169e1;
-    --primary-foreground: #ffffff;
-    --secondary: #6b7280;
-    --secondary-foreground: #ffffff;
-    --accent: #6366f1;
-    --accent-foreground: #ffffff;
-    --destructive: #ef4444;
-    --destructive-foreground: #ffffff;
-    --success: #22c55e;
-    --success-foreground: #ffffff;
+    /* RGB channels — required by Tailwind's rgb(var(--x) / alpha) pattern */
+    --background:            13 12 11;
+    --foreground:           240 237 232;
+    --border:                42 40 38;
+    --muted:                 22 21 20;
+    --muted-foreground:     122 119 111;
+    --primary:              240 165 53;   /* amber accent */
+    --primary-foreground:    13 12 11;
+    --secondary:             42 40 38;
+    --secondary-foreground: 240 237 232;
+    --accent:               240 165 53;
+    --accent-foreground:     13 12 11;
+    --destructive:          229 82 82;
+    --destructive-foreground: 240 237 232;
+    --success:               91 214 148;
+    --success-foreground:    13 12 11;
 
-    /* Notion-style priority indicators */
-    --priority-high: #ef4444;
-    --priority-medium: #fb923c;
-    --priority-low: #9ca3af;
-  }
+    /* Solid hex values for use outside Tailwind (direct CSS) */
+    --c-bg:       #0d0c0b;
+    --c-fg:       #f0ede8;
+    --c-amber:    #f0a535;
+    --c-danger:   #e55252;
+    --c-border:   #2a2826;
+    --c-muted-fg: #7a776f;
+    --c-surface:  #161514;
 
-  .dark {
-    --background: #141413;
-    --foreground: #f5f5f3;
-    --border: #373532;
-    --muted: #292927;
-    --muted-foreground: #a8a29b;
-    --primary: #60a5fa;
-    --primary-foreground: #141413;
-    --secondary: #d1d5db;
-    --secondary-foreground: #141413;
-    --accent: #a5b4fc;
-    --accent-foreground: #141413;
-    --destructive: #f87171;
-    --destructive-foreground: #141413;
-    --success: #4ade80;
-    --success-foreground: #141413;
-
-    --priority-high: #f87171;
-    --priority-medium: #fdba74;
-    --priority-low: #d1d5db;
+    /* Priority indicator colors */
+    --priority-high:   #e55252;
+    --priority-medium: #f0a535;
+    --priority-low:    #4a4845;
   }
 }
 
+/* ─── Global base styles ─── */
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
@@ -214,55 +85,173 @@
 
   body {
     min-height: 100vh;
-    background-color: rgb(var(--background));
-    color: rgb(var(--foreground));
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    background-color: rgb(var(--background) / 1);
+    color: rgb(var(--foreground) / 1);
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
-  /* Notion-inspired typography hierarchy */
-  h1 {
-    @apply text-4xl font-bold tracking-tight;
-  }
+  h1 { font-family: 'Syne', sans-serif; @apply text-4xl font-bold tracking-tight; }
+  h2 { font-family: 'Syne', sans-serif; @apply text-2xl font-semibold tracking-tight; }
+  h3 { font-family: 'Syne', sans-serif; @apply text-lg font-semibold; }
 
-  h2 {
-    @apply text-2xl font-semibold tracking-tight;
-  }
-
-  h3 {
-    @apply text-lg font-semibold;
-  }
-
-  /* Refined focus states */
   button:focus-visible {
-    outline: none;
-    box-shadow:
-      0 0 0 2px rgb(var(--background) / 1),
-      0 0 0 4px rgb(var(--primary) / 1);
+    outline: 2px solid var(--c-amber);
+    outline-offset: 2px;
   }
 
-  input:focus-visible,
-  textarea:focus-visible,
-  select:focus-visible {
+  input:focus-visible, textarea:focus-visible, select:focus-visible {
     outline: none;
-    box-shadow:
-      0 0 0 2px rgb(var(--background) / 1),
-      0 0 0 4px rgb(var(--primary) / 0.5);
+    box-shadow: 0 0 0 1px var(--c-amber);
   }
 
-  /* Smooth transitions for interactive elements */
-  button,
-  a,
-  input,
-  textarea,
-  select {
-    @apply transition-all duration-200 ease-out;
-  }
+  button, a, input, textarea, select { @apply transition-all duration-150 ease-out; }
 
   @media (prefers-reduced-motion: reduce) {
-    * {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
+    * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   }
+}
+
+/* ─── Custom component styles ─── */
+@layer components {
+
+  /* Circular checkbox → amber fill on :checked */
+  .task-checkbox {
+    appearance: none;
+    width: 1.0625rem;
+    height: 1.0625rem;
+    border: 1.5px solid var(--c-border);
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s, background-color 0.15s;
+  }
+  .task-checkbox:hover:not(:disabled)  { border-color: var(--c-amber); }
+  .task-checkbox:checked               { background-color: var(--c-amber); border-color: var(--c-amber); }
+  .task-checkbox:checked::after {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 7px;
+    border: 1.5px solid var(--c-bg);
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translateY(-1px);
+    position: absolute;
+  }
+  .task-checkbox:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* Floating action menu */
+  .task-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 4px);
+    z-index: 100;
+    min-width: 9rem;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
+    padding: 3px 0;
+    box-shadow: 0 8px 28px rgb(0 0 0 / 0.65);
+  }
+  .task-menu [role="menuitem"] {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 7px 14px;
+    font-size: 0.8125rem;
+    font-family: 'Manrope', sans-serif;
+    color: rgb(var(--foreground) / 1);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  .task-menu [role="menuitem"]:hover      { background-color: rgb(var(--border) / 1); }
+  .task-menu [role="menuitem"].danger      { color: var(--c-danger); }
+
+  /* Styled native <select> */
+  .custom-select {
+    appearance: none;
+    background-color: transparent;
+    border: 1px solid var(--c-border);
+    padding: 5px 24px 5px 10px;
+    font-size: 0.75rem;
+    font-family: 'Manrope', sans-serif;
+    color: rgb(var(--muted-foreground) / 1);
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath fill='%237a776f' d='M0 0l4 5 4-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 9px center;
+  }
+  .custom-select:hover { border-color: var(--c-muted-fg); color: rgb(var(--foreground) / 1); }
+  .custom-select:focus { outline: none; border-color: var(--c-amber); color: rgb(var(--foreground) / 1); }
+  .custom-select option { background-color: var(--c-surface); color: rgb(var(--foreground) / 1); }
+
+  /* Form field label */
+  .field-label {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c-muted-fg);
+    margin-bottom: 6px;
+  }
+
+  /* Text input / textarea used in detail drawer */
+  .field-input {
+    width: 100%;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
+    padding: 8px 10px;
+    font-size: 0.875rem;
+    font-family: 'Manrope', sans-serif;
+    color: rgb(var(--foreground) / 1);
+  }
+  .field-input::placeholder { color: var(--c-muted-fg); }
+  .field-input:focus        { outline: none; border-color: var(--c-amber); }
+
+  /* Primary CTA */
+  .btn-primary {
+    padding: 7px 18px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Manrope', sans-serif;
+    background-color: var(--c-amber);
+    color: var(--c-bg);
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+  .btn-primary:hover:not(:disabled) { opacity: 0.88; }
+  .btn-primary:disabled              { opacity: 0.35; cursor: not-allowed; }
+
+  /* Ghost / secondary */
+  .btn-ghost {
+    padding: 7px 14px;
+    font-size: 0.6875rem;
+    font-family: 'Manrope', sans-serif;
+    background: transparent;
+    color: var(--c-muted-fg);
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+  .btn-ghost:hover:not(:disabled) { color: rgb(var(--foreground) / 1); }
+  .btn-ghost:disabled              { opacity: 0.35; cursor: not-allowed; }
+
+  /* Danger text button */
+  .btn-danger {
+    padding: 0;
+    font-size: 0.8125rem;
+    font-family: 'Manrope', sans-serif;
+    background: transparent;
+    color: var(--c-danger);
+    border: none;
+    cursor: pointer;
+  }
+  .btn-danger:hover:not(:disabled) { opacity: 0.75; }
+  .btn-danger:disabled              { opacity: 0.35; cursor: not-allowed; }
 }
