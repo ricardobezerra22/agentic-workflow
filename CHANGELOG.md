@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Docs** docs: Document migration completion and update workflows (`c92b717`) — 2026-10-04
 - **Changed** chore: Add shadcn/ui configuration (`1467042`) — 2026-10-04
 - **Changed** restore: Add back integration tests for API routes (`4a80456`) — 2026-10-04
 - **Changed** chore: Clean up old Vite setup files from pre-Next.js migration (`b02c762`) — 2026-10-04

@@ -1,8 +1,8 @@
 # Next.js Migration Status
 
 **Branch**: `feat/unified-server`
-**Date**: 2026-10-04
-**Status**: ~80% Complete - Infrastructure ready, features in progress
+**Date**: 2026-10-04 (Updated: 2026-10-04)
+**Status**: ✅ ~95% Complete - Infrastructure, features, and Radix UI integration complete; remaining: DB init, test coverage, E2E tests
 
 ## ✅ Completed
 
@@ -35,15 +35,25 @@
 - [x] `lib/validation.ts` - form/API validation with types
 - [x] `lib/greeting.ts` - greeting/farewell utilities
 
-### UI Components
-All in `components/ui/` with TypeScript, accessibility (WCAG 2.1), and tailored styling:
-- [x] `Button` - variants (primary, secondary, ghost, danger), loading state
-- [x] `Input` - with label, error handling, helper text
-- [x] `Badge` - for task priorities (low/medium/high) with semantic colors
-- [x] `Card` - with hover effects
-- [x] `Alert` - for error/success/warning/info states
-- [x] `Dialog` - modal for confirmations with focus management
-- [x] `Skeleton` + `Spinner` - for loading states
+### UI Components (13 total)
+All in `components/ui/` with TypeScript, accessibility (WCAG 2.1), Tailwind styling, and design tokens:
+
+**Radix UI Primitives (6 components):**
+- [x] `Dialog` - Radix.Dialog with Portal + overlay + animations
+- [x] `Dropdown Menu` - Radix.DropdownMenu with sub-triggers and keyboard nav
+- [x] `Select` - Radix.Select with trigger and content
+- [x] `Tooltip` - Radix.Tooltip with Provider wrapper
+- [x] `Popover` - Radix.Popover with Portal
+- [x] `Command` - cmdk keyboard navigation component
+
+**Pure Tailwind Components (7 components):**
+- [x] `Button` - CVA variants (primary, secondary, ghost, danger), loading state
+- [x] `Input` - form input with label, error handling, helper text
+- [x] `Badge` - priority indicators (low/medium/high) with semantic colors
+- [x] `Card` - semantic structure with hover effects
+- [x] `Alert` - status messaging (error/success/warning/info)
+- [x] `Skeleton` - loading placeholder
+- [x] `Toast` - notification system
 
 ### API Routes
 Full REST API with proper error handling and Prisma queries:
@@ -70,68 +80,70 @@ Full REST API with proper error handling and Prisma queries:
   - Mobile-first responsive design
   - WCAG 2.1 AA accessible (contrast, keyboard nav, focus indicators, labels)
 
+### Feature Components (13 total)
+All in `features/tasks/components/` with TypeScript, Client Components for interactivity:
+- [x] `TasksClientRedesigned` - Main client component orchestrating filters, creation, list
+- [x] `TaskCard` - Individual task card with badge, due date, edit/delete buttons
+- [x] `TaskForm` - Client Component for creating/editing tasks
+- [x] `TaskFilters` - Client Component for status/priority/search filters
+- [x] `TaskHeader` - Header with title, "New" button, and Filter toggle
+- [x] `TaskEmptyState` - Message + "Create first task" CTA
+- [x] `TaskDeleteDialog` - Confirmation dialog wrapper using Radix Dialog
+- [x] `TaskList` - Task list with divide layout
+- [x] `TaskListMinimal` - Minimal task list variant
+- [x] `TaskItem` - Individual task item renderer
+- [x] `TasksClient` - Legacy client component
+- [x] `InlineTaskCreator` - Inline task creation form
+- [x] `FilterPopover` - Filter UI with Select components (Radix-backed)
+
+### Hooks (5 total)
+All in `features/tasks/hooks/` managing state and API communication:
+- [x] `useTasks()` - fetch tasks from `/api/tasks` with filtering
+- [x] `useTaskMutation()` - create/update/delete with optimistic UI + error handling
+- [x] `useTaskFilters()` - manage filter state (status, priority, search)
+- [x] `useUndoStack()` - undo/redo state management
+- [x] `useKeyboardShortcuts()` - keyboard navigation and shortcuts
+
 ### Testing
 - [x] Test structure ready:
   - Vitest for unit + integration tests
   - Playwright for E2E tests
-  - Tests colocated in `src/*.test.ts`
-  - `tests/e2e/` directory for Playwright specs
+  - Integration tests: `src/tasks.integration.test.ts`, `src/lib/validation.test.ts`
+  - E2E test infrastructure in place via playwright.config.ts
 
 ---
 
 ## ⏳ Remaining (Next Steps)
 
-### 1. Feature Components (features/tasks/)
-These need to be created in `features/tasks/components/`:
-- [ ] `TaskList` - Server Component that fetches and displays tasks
-- [ ] `TaskCard` - Individual task card with badge, due date, edit/delete buttons
-- [ ] `TaskForm` - Client Component for creating/editing tasks
-- [ ] `TaskFilters` - Client Component for status/priority/search filters
-- [ ] `TaskEmptyState` - Message + "Create first task" CTA
-- [ ] `TaskDeleteDialog` - Confirmation dialog wrapper
+### 2. Test Coverage Expansion (80%+ target)
+Per `CLAUDE.md` requirements, every behavior in a spec scenario must have a matching test:
+- [ ] Expand integration tests for all `/api/tasks` endpoints (create, read, list, update, delete scenarios)
+- [ ] Add unit tests for validation logic (`lib/validation.ts`)
+- [ ] Create E2E tests with Playwright for critical user flows:
+  - Create task and verify in list
+  - Edit task title/priority/due date
+  - Mark task completed/incomplete
+  - Filter by status (open/done) and priority (low/medium/high)
+  - Search tasks by text
+  - Delete task with confirmation dialog
+  - Form validation (empty title, invalid date formats)
+  - Empty state display and "Create first task" CTA
+  - Keyboard shortcuts (N for new, Cmd+K for search, etc.)
 
-Hooks in `features/tasks/hooks/`:
-- [ ] `useTasks()` - fetch tasks from `/api/tasks`
-- [ ] `useTaskMutation()` - create/update/delete with optimistic UI + error handling
-- [ ] `useTaskFilters()` - manage filter state
+### 3. Polish & Production
+- [ ] Add toast notifications (success/error feedback) if not already added
+- [ ] Implement pagination or infinite scroll for large task lists
+- [ ] Add sorting options (by due date, priority, created date)
+- [ ] Server-side error boundaries and graceful error handling
+- [ ] Optimistic UI updates for better perceived performance
+- [ ] Full accessibility audit (WCAG 2.1 AA conformance check)
+- [ ] Responsive testing across mobile/tablet/desktop
+- [ ] Lighthouse audit (performance, SEO, accessibility targets)
 
-### 2. Initialize Database & Prisma
-```bash
-# Once database is running:
-npm run todo:db:init
-
-# This should:
-# 1. Generate Prisma Client (fixes import errors)
-# 2. Push schema to database (idempotent)
-# 3. Make app ready to run
-```
-
-### 3. Tests
-- [ ] Port existing unit tests from `src/greeting.test.js` → `src/greeting.test.ts`
-- [ ] Create integration tests for `/api/tasks` routes (using NextRequest mock)
-- [ ] Create E2E tests with Playwright:
-  - Create task (POST → list updates)
-  - Edit task (PATCH)
-  - Mark completed (toggles checkbox)
-  - Filter by status/priority
-  - Delete with confirmation
-  - Form validation (empty title, invalid date)
-  - Empty state display
-
-### 4. Polish & Production
-- [ ] Add toast notifications (for success/error feedback)
-- [ ] Implement pagination for task list
-- [ ] Add sorting options
-- [ ] Server-side error boundaries
-- [ ] Optimistic UI updates
-- [ ] Accessibility audit (WCAG validator)
-- [ ] Responsive testing (mobile, tablet, desktop)
-- [ ] Lighthouse audit (performance, SEO, accessibility)
-
-### 5. Deployment
-- [ ] Verify `vercel.json` is minimal (just buildCommand)
-- [ ] Test build on Vercel CI
-- [ ] Production environment variables
+### 4. Deployment
+- [ ] Verify `vercel.json` configuration
+- [ ] Test production build on Vercel CI
+- [ ] Set up production environment variables
 
 ---
 

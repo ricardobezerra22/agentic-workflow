@@ -1,10 +1,14 @@
 schema: spec-driven
 
 context: |
-  Tiny Vite + vanilla JS app used to exercise an agentic SDD workflow.
-  Source in src/, tests colocated as *.test.js (Vitest). Every behavior in a
-  spec scenario must have a matching test. `npm run lint && npm test &&
-  npm run build` must pass before a change is considered done.
+  Next.js 16 + TypeScript + Prisma + Tailwind v4 + Radix UI production-grade
+  task management application. Full stack: Server Components by default,
+  Client Components for interactivity. Tailwind with custom design tokens
+  (CSS variables, light/dark mode ready). Radix UI primitives for accessible
+  components. Full accessibility (WCAG 2.1 AA). REST API with Prisma ORM,
+  PostgreSQL database. Comprehensive testing infrastructure: Vitest for unit/integration,
+  Playwright for E2E. Every behavior in a spec scenario must have a matching test.
+  `npm run lint && npm test && npm run build` must pass before a change is considered done.
 
 rules:
   tasks:
