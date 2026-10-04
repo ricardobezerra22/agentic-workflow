@@ -25,14 +25,13 @@ if (!OPENROUTER_API_KEY) {
   process.exit(1)
 }
 
-const BLOG_POST_API_URL =
-  process.env.BLOG_POST_API_URL ?? 'https://blog-docs-nine.vercel.app/api/posts'
+const BLOG_POST_API_URL = 'https://blog-docs-nine.vercel.app/api/posts'
 if (!BLOG_POST_API_URL) {
   console.error('❌ BLOG_POST_API_URL not set')
   process.exit(1)
 }
 
-const MODEL = process.env.BLOG_POST_MODEL ?? 'z-ai/glm-5.3-flash'
+const MODEL = 'z-ai/glm-5.3-flash'
 
 const changelog = readFileSync('CHANGELOG.md', 'utf8')
 const match = changelog.match(/## \[Unreleased\](.*?)(?=\n## |$)/s)
