@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Added** feat: add recurrence database schema and utilities (`e828745`) — 2026-10-04
 - **Added** feat: add recurring tasks proposal and specifications (`01c690a`) — 2026-10-04
 - **Fixed** fix: Use TEST_DATABASE_URL in Prisma client for CI integration tests (`ae2b6ec`) — 2026-10-04
 - **Fixed** fix: Exclude api-routes tests from vitest (require running server) (`8e9948b`) — 2026-10-04

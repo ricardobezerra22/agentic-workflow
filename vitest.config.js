@@ -8,7 +8,7 @@ export default defineConfig({
     },
   },
   test: {
-    include: ["tests/**/*.integration.test.ts", "!tests/api-routes.integration.test.ts"],
+    include: ["tests/**/*.test.ts", "lib/**/*.test.ts", "!tests/api-routes.integration.test.ts"],
     fileParallelism: false,
     isolate: false,
   },

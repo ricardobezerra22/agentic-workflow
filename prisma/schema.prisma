@@ -11,16 +11,22 @@ datasource db {
 }
 
 model Task {
-  id          Int       @id @default(autoincrement())
-  title       String    @db.VarChar(200)
-  description String?
-  priority    Priority  @default(medium)
-  dueDate     DateTime? @map("due_date") @db.Date
-  completed   Boolean   @default(false)
-  completedAt DateTime? @map("completed_at") @db.Timestamp
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp
-  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamp
+  id                Int               @id @default(autoincrement())
+  title             String            @db.VarChar(200)
+  description       String?
+  priority          Priority          @default(medium)
+  dueDate           DateTime?         @map("due_date") @db.Date
+  completed         Boolean           @default(false)
+  completedAt       DateTime?         @map("completed_at") @db.Timestamp
+  recurrencePattern RecurrencePattern @default(NONE)
+  recurrenceEndDate DateTime?         @map("recurrence_end_date") @db.Date
+  parentTaskId      Int?              @map("parent_task_id")
+  parentTask        Task?             @relation("recurrence_series", fields: [parentTaskId], references: [id], onDelete: SetNull)
+  childTasks        Task[]            @relation("recurrence_series")
+  createdAt         DateTime          @default(now()) @map("created_at") @db.Timestamp
+  updatedAt         DateTime          @updatedAt @map("updated_at") @db.Timestamp
 
+  @@index([parentTaskId])
   @@map("tasks")
 }
 
@@ -28,4 +34,11 @@ enum Priority {
   low
   medium
   high
+}
+
+enum RecurrencePattern {
+  NONE
+  DAILY
+  WEEKLY
+  MONTHLY
 }
