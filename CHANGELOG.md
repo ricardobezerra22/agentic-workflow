@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Changed** chore: Update Next.js environment types (`a477bfe`) — 2026-10-04
 - **Added** feat: Integrate Radix UI primitives with shadcn/ui-quality components (`0c7e431`) — 2026-10-04
 - **Changed** chore: Remove archived change artifacts (`9d28206`) — 2026-10-04
 - **Changed** archive: Archive audit-and-fix-validation change (`da3f2c0`) — 2026-10-04
