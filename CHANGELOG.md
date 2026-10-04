@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Added** feat: Add UI components, API routes, and page layout (`17c344a`) — 2026-10-04
 - **Added** feat: Migrate to Next.js + TypeScript + Prisma + Tailwind (`fd495a0`) — 2026-10-04
 - **Added** feat: Server-Side Rendering (SSR) for index.html (`5366bb6`) — 2026-10-04
 - **Fixed** fix: remove tests from Vercel buildCommand (`5c89118`) — 2026-10-04
