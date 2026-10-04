@@ -73,9 +73,22 @@
       opacity: 0;
     }
   }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes slide-in-from-right {
+      from { transform: translateX(100%); opacity: 0; }
+      to   { transform: translateX(0);    opacity: 1; }
+    }
+  }
 }
 
 @layer utilities {
+  .slide-in-from-right {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: slide-in-from-right 0.2s ease-out;
+    }
+  }
+
   .animate-in {
     animation: fade-in 0.2s ease-out;
   }

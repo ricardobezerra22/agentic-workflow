@@ -9,6 +9,7 @@ interface TaskListMinimalProps {
   onToggleComplete: (taskId: number, completed: boolean) => Promise<void>
   onRename: (taskId: number, newTitle: string) => Promise<void>
   onDelete: (taskId: number) => void
+  onOpen?: (taskId: number) => void
   deletingId?: number | null
 }
 
@@ -18,6 +19,7 @@ export function TaskListMinimal({
   onToggleComplete,
   onRename,
   onDelete,
+  onOpen,
   deletingId,
 }: TaskListMinimalProps) {
   if (loading && tasks.length === 0) {
@@ -51,6 +53,7 @@ export function TaskListMinimal({
           onToggleComplete={(completed) => onToggleComplete(task.id, completed)}
           onRename={(newTitle) => onRename(task.id, newTitle)}
           onDelete={() => onDelete(task.id)}
+          onOpen={onOpen ? () => onOpen(task.id) : undefined}
           isDeleting={deletingId === task.id}
         />
       ))}
