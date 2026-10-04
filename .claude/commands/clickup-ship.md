@@ -47,6 +47,7 @@ artifacts are written, continue into apply, unless `--review-spec` was passed.
    - Follow `.claude/commands/opsx/apply.md`. For each task: write the failing test
      first, run it and confirm it fails for the right reason, implement, run it again.
    - Every spec scenario needs a test. Keep tasks checked off in `tasks.md` as you go.
+   - For E2E test scenarios, use `/feature-with-playwright` skill to generate Playwright test code from feature requirements. This skill automates creation of end-to-end test scenarios that cover user flows and critical paths.
 
 6. **Quality gate**
    - Run `npm run lint && npm test && npm run build`. Fix failures and re-run. After

@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npm run lint && npm run build",
+  "devCommand": "npm run dev & npm run todo:dev",
+  "installCommand": "npm ci",
+  "outputDirectory": ".next"
+}
