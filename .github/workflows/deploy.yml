@@ -25,6 +25,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: production
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: todo_test
+          POSTGRES_USER: todo
+          POSTGRES_PASSWORD: todo
+        options: >-
+          --health-cmd "pg_isready -U todo"
+          --health-interval 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -32,7 +45,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm test
+      - name: Test
+        env:
+          TEST_DATABASE_URL: postgres://todo:todo@localhost:5432/todo_test
+        run: npm test
       - run: npx vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
       - run: npx vercel build --token=${{ secrets.VERCEL_TOKEN }}
       - id: deploy
@@ -53,6 +69,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: production
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: todo_test
+          POSTGRES_USER: todo
+          POSTGRES_PASSWORD: todo
+        options: >-
+          --health-cmd "pg_isready -U todo"
+          --health-interval 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -61,7 +90,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
-      - run: npm test
+      - name: Test
+        env:
+          TEST_DATABASE_URL: postgres://todo:todo@localhost:5432/todo_test
+        run: npm test
       - run: npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
       - run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
       - run: npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
