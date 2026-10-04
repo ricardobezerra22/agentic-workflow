@@ -1,5 +1,6 @@
 export type Priority = 'low' | 'medium' | 'high'
 export type Status = 'all' | 'open' | 'done'
+export type RecurrencePattern = 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY'
 
 interface ValidationError {
   field: string
@@ -13,6 +14,7 @@ interface ValidationResult {
 
 const VALID_PRIORITIES: Priority[] = ['low', 'medium', 'high']
 const VALID_STATUSES: Status[] = ['all', 'open', 'done']
+const VALID_RECURRENCE_PATTERNS: RecurrencePattern[] = ['NONE', 'DAILY', 'WEEKLY', 'MONTHLY']
 
 function isValidDate(str: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(str)) return false
@@ -50,12 +52,24 @@ export function validateTask(body: unknown): ValidationResult {
     }
   }
 
+  if (bodyObj.recurrencePattern != null) {
+    if (!VALID_RECURRENCE_PATTERNS.includes(bodyObj.recurrencePattern as RecurrencePattern)) {
+      errors.push({ field: 'recurrencePattern', issue: 'invalid_value' })
+    }
+  }
+
+  if (bodyObj.recurrenceEndDate !== undefined && bodyObj.recurrenceEndDate !== null) {
+    if (typeof bodyObj.recurrenceEndDate !== 'string' || !isValidDate(bodyObj.recurrenceEndDate)) {
+      errors.push({ field: 'recurrenceEndDate', issue: 'invalid_date' })
+    }
+  }
+
   return { valid: errors.length === 0, errors }
 }
 
 export function validatePatchTask(body: unknown): ValidationResult {
   const bodyObj = body as Record<string, unknown>
-  const KNOWN = ['title', 'description', 'priority', 'dueDate', 'completed']
+  const KNOWN = ['title', 'description', 'priority', 'dueDate', 'completed', 'completeAction', 'recurrencePattern', 'recurrenceEndDate', 'applyToFuture']
   const hasKnown = KNOWN.some(k => k in bodyObj)
   if (!hasKnown) {
     return {
@@ -63,6 +77,15 @@ export function validatePatchTask(body: unknown): ValidationResult {
       errors: [{ field: 'body', issue: 'no_known_fields' }],
     }
   }
+
+  // Validate completeAction if provided
+  if (bodyObj.completeAction != null && !['mark_done', 'mark_done_skip_next'].includes(bodyObj.completeAction as string)) {
+    return {
+      valid: false,
+      errors: [{ field: 'completeAction', issue: 'invalid_value' }],
+    }
+  }
+
   return validateTask({ title: bodyObj.title ?? 'placeholder', ...bodyObj })
 }
 

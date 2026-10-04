@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { validatePatchTask } from '@/lib/validation'
+import { calculateNextDueDate, isRecurrenceEndDatePassed } from '@/lib/recurrence'
 
 export const dynamic = 'force-dynamic'
 
@@ -84,9 +85,43 @@ export async function PATCH(
       }
     }
 
-    const task = await prisma.task.update({
-      where: { id },
-      data: updateData,
+    // Handle completeAction for recurring tasks
+    const completeAction = body.completeAction as string | undefined
+    if (completeAction === 'mark_done_skip_next' && existing.recurrencePattern === 'NONE') {
+      return errorResponse('VALIDATION_ERROR', 'Cannot skip next on non-recurring task')
+    }
+
+    // Use transaction for atomic update + auto-create
+    const task = await prisma.$transaction(async (tx: any) => {
+      const updated = await tx.task.update({
+        where: { id },
+        data: updateData,
+      })
+
+      // Auto-create next occurrence if completing or skipping a recurring task
+      if ((completeAction === 'mark_done' || completeAction === 'mark_done_skip_next') &&
+          existing.recurrencePattern !== 'NONE' &&
+          existing.dueDate) {
+
+        const nextDueDate = calculateNextDueDate(new Date(existing.dueDate), existing.recurrencePattern as any)
+
+        // Don't create if past end date
+        if (!isRecurrenceEndDatePassed(existing.recurrenceEndDate)) {
+          await tx.task.create({
+            data: {
+              title: existing.title,
+              description: existing.description,
+              priority: existing.priority,
+              dueDate: nextDueDate,
+              recurrencePattern: existing.recurrencePattern,
+              recurrenceEndDate: existing.recurrenceEndDate,
+              parentTaskId: id,
+            },
+          })
+        }
+      }
+
+      return updated
     })
 
     return NextResponse.json(task)
@@ -101,7 +136,7 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -116,7 +151,42 @@ export async function DELETE(
       return errorResponse('NOT_FOUND', 'Task not found', undefined, 404)
     }
 
-    await prisma.task.delete({ where: { id } })
+    // Handle deleteSeries parameter
+    const { searchParams } = new URL(req.url)
+    const deleteSeries = searchParams.get('deleteSeries') === 'true'
+
+    if (deleteSeries && existing.recurrencePattern !== 'NONE') {
+      // Delete entire series
+      const rootId = existing.parentTaskId || id
+      const allInSeries = await prisma.task.findMany({
+        where: {
+          OR: [
+            { id: rootId },
+            { parentTaskId: rootId },
+          ],
+        },
+      })
+
+      const idsToDelete = allInSeries.map((t: any) => t.id)
+      await prisma.task.deleteMany({
+        where: { id: { in: idsToDelete } },
+      })
+    } else {
+      // Delete only this task, orphan children
+      if (existing.recurrencePattern !== 'NONE' && existing.parentTaskId) {
+        // This is a child; just delete it
+        await prisma.task.delete({ where: { id } })
+      } else if (existing.recurrencePattern !== 'NONE') {
+        // This is a parent; orphan children
+        await prisma.task.updateMany({
+          where: { parentTaskId: id },
+          data: { parentTaskId: null },
+        })
+        await prisma.task.delete({ where: { id } })
+      } else {
+        await prisma.task.delete({ where: { id } })
+      }
+    }
 
     return new NextResponse(null, { status: 204 })
   } catch (error) {
