@@ -48,6 +48,13 @@ jobs:
           BODY=$(cat /tmp/review-output.txt)
           gh pr comment "$PR_NUMBER" --body "$(printf '### CI Code Review\n\n```\n%s\n```' "$BODY")"
 
+      - name: PR Summary
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: node scripts/pr-summary.mjs
+
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -78,9 +85,18 @@ jobs:
         run: npm run lint
 
       - name: Test
+        id: test
         env:
           TEST_DATABASE_URL: postgres://todo:todo@localhost:5432/todo_test
-        run: npm test
+        run: npm test 2>&1 | tee /tmp/test-output.txt; exit ${PIPESTATUS[0]}
+
+      - name: Explain test failures
+        if: failure() && github.event_name == 'pull_request' && steps.test.outcome == 'failure'
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: node scripts/test-explainer.mjs /tmp/test-output.txt
 
       - name: Build
         run: npm run build
