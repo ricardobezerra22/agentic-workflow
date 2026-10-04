@@ -97,3 +97,18 @@ jobs:
       - run: npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
       - run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
       - run: npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Notify blog post API
+        env:
+          BLOG_POST_API_KEY: ${{ secrets.BLOG_POST_API_KEY }}
+          BLOG_POST_API_URL: ${{ vars.BLOG_POST_API_URL }}
+          GH_SHA: ${{ github.sha }}
+          GH_REF: ${{ github.ref }}
+          GH_ACTOR: ${{ github.actor }}
+          GH_REPO: ${{ github.repository }}
+          GH_RUN_ID: ${{ github.run_id }}
+          GH_DEPLOYED_AT: ${{ github.event.head_commit.timestamp }}
+        run: |
+          curl -fsSL -X POST "$BLOG_POST_API_URL" \
+            -H "Authorization: Bearer $BLOG_POST_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"sha\":\"$GH_SHA\",\"ref\":\"$GH_REF\",\"actor\":\"$GH_ACTOR\",\"repo\":\"$GH_REPO\",\"run_url\":\"https://github.com/$GH_REPO/actions/runs/$GH_RUN_ID\",\"deployed_at\":\"$GH_DEPLOYED_AT\"}"
