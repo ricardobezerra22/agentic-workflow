@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Changed** chore: Initialize Prisma database and stabilize dependencies (`89a2d3c`) — 2026-10-04
 - **Changed** design: Redesign Task Manager inspired by iOS Notes (`acee379`) — 2026-10-04
 - **Added** feat: Replace greeting page with full Todo List UI (`1044627`) — 2026-10-04
 - **Docs** docs: Add comprehensive Next.js migration status and next steps (`e8d0c56`) — 2026-10-04

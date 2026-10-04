@@ -19,14 +19,14 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@prisma/client": "^7.10.0",
+    "@prisma/client": "^5.22.0",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/postcss": "^4.3.3",
     "autoprefixer": "^10.6.1",
     "dotenv": "^16.4.5",
     "next": "^16.3.8",
     "postcss": "^8.5.28",
-    "prisma": "^8.0.0-rc.19",
+    "prisma": "^5.22.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "tailwindcss": "^4.3.3"

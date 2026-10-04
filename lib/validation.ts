@@ -71,7 +71,10 @@ export function validateListParams(query: unknown): ValidationResult {
     errors.push({ field: 'status', issue: 'invalid_value' })
   }
 
-  if (queryObj.priority !== undefined && !VALID_PRIORITIES.includes(queryObj.priority as Priority)) {
+  if (
+    queryObj.priority !== undefined &&
+    !VALID_PRIORITIES.includes(queryObj.priority as Priority)
+  ) {
     errors.push({ field: 'priority', issue: 'invalid_value' })
   }
 
