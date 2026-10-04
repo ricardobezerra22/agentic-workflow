@@ -24,7 +24,7 @@ if (!OPENROUTER_API_KEY) {
   process.exit(1)
 }
 
-const MODEL = process.env.PR_SUMMARY_MODEL ?? 'nvidia/nemotron-3-embed-1b:free'
+const MODEL = 'z-ai/glm-5.3-flash'
 
 let diff
 try {

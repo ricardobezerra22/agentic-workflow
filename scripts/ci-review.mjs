@@ -28,7 +28,7 @@ if (!OPENROUTER_API_KEY) {
 }
 
 const FAIL_BELOW = (process.env.REVIEW_FAIL_BELOW ?? 'D').toUpperCase()
-const MODEL = process.env.REVIEW_MODEL ?? 'nvidia/nemotron-3-embed-1b:free'
+const MODEL = process.env.REVIEW_MODEL ?? 'z-ai/glm-5.3-flash'
 const GRADE_ORDER = ['A', 'B', 'C', 'D', 'F']
 
 function gradeBelow(grade, threshold) {

@@ -32,7 +32,7 @@ if (!BLOG_POST_API_URL) {
   process.exit(1)
 }
 
-const MODEL = process.env.BLOG_POST_MODEL ?? 'nvidia/nemotron-3-embed-1b:free'
+const MODEL = process.env.BLOG_POST_MODEL ?? 'z-ai/glm-5.3-flash'
 
 const changelog = readFileSync('CHANGELOG.md', 'utf8')
 const match = changelog.match(/## \[Unreleased\](.*?)(?=\n## |$)/s)

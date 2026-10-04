@@ -39,7 +39,7 @@ if (!failureLog.trim()) {
   process.exit(0)
 }
 
-const MODEL = process.env.EXPLAINER_MODEL ?? 'nvidia/nemotron-3-embed-1b:free'
+const MODEL = process.env.EXPLAINER_MODEL ?? 'z-ai/glm-5.3-flash'
 
 const openrouter = new OpenRouter({ apiKey: OPENROUTER_API_KEY })
 const stream = await openrouter.chat.send({
