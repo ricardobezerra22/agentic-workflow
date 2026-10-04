@@ -31,8 +31,9 @@ if echo "$CHECKS" | grep -qiE "pending|queued|in_progress"; then
   exit 2
 fi
 
-# Extract overall grade from the CI review comment posted by ci.yml
-GRADE=$(gh pr view "$PR_NUM" --json comments --jq '[.comments[].body] | join("\n")' 2>/dev/null \
+# Extract grade only from github-actions[bot] comments to prevent spoofing
+GRADE=$(gh pr view "$PR_NUM" --json comments \
+  --jq '[.comments[] | select(.author.login == "github-actions") | .body] | join("\n")' 2>/dev/null \
   | grep -oE '│ Overall: +[A-F]' | tail -1 | grep -oE '[A-F]$')
 
 if [ -z "$GRADE" ]; then

@@ -2,9 +2,9 @@
 # PostToolUse hook — appends the latest commit to CHANGELOG.md after every git commit.
 cd "$CLAUDE_PROJECT_DIR" || exit 2
 
-# Only act on git commit commands
+# Only act on git commit commands (exact match, not substring of unrelated commands)
 CMD=$(python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command',''))" 2>/dev/null)
-echo "$CMD" | grep -q "git commit" || exit 0
+echo "$CMD" | grep -qE '(^|&&\s*|;\s*)git commit\b' || exit 0
 
 # Get latest commit: hash|subject|date
 IFS='|' read -r HASH SUBJECT DATE < <(git log -1 --pretty=format:'%h|%s|%cd' --date=short 2>/dev/null)
@@ -51,6 +51,6 @@ open(path, 'w').writelines(out)
 PYEOF
 
 # Amend the commit to include CHANGELOG.md — shell cmds inside hooks don't re-trigger hooks
-SKIP_REVIEW=1 git add "$CHANGELOG" && SKIP_REVIEW=1 git commit --amend --no-edit --no-gpg-sign 2>/dev/null
+SKIP_REVIEW=1 git add "$CHANGELOG" && SKIP_REVIEW=1 git commit --amend --no-edit 2>/dev/null
 echo "changelog: amended commit $HASH with CHANGELOG.md entry" >&2
 exit 0
