@@ -85,10 +85,16 @@ export function TaskItem({
   const isOverdue = !task.completed && task.dueDate && new Date(task.dueDate) < new Date()
   const dueText = formatDate(task.dueDate)
 
+  const priorityColors = {
+    high: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+    medium: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+    low: 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400',
+  }
+
   return (
     <div
-      className={`group flex items-center gap-3 px-4 py-3 border-b border-border/30 transition-all duration-200 ${
-        task.completed ? 'bg-muted/20' : 'hover:bg-muted/30'
+      className={`group flex items-center gap-4 px-6 py-4 border-b border-border/20 transition-all duration-200 ${
+        task.completed ? 'bg-muted/30 hover:bg-muted/40' : 'hover:bg-muted/25'
       } ${isDeleting ? 'animate-out slide-out-to-right fade-out' : 'animate-in'}`}
     >
       {/* Checkbox */}
@@ -97,7 +103,7 @@ export function TaskItem({
         checked={task.completed}
         onChange={handleToggleComplete}
         disabled={isToggling || isDeleting}
-        className="h-5 w-5 shrink-0 rounded border-border text-primary cursor-pointer disabled:opacity-50"
+        className="h-5 w-5 shrink-0 rounded border border-border text-primary cursor-pointer disabled:opacity-50 transition-all duration-200 accent-primary"
         aria-label={`Mark "${task.title}" as ${task.completed ? 'incomplete' : 'complete'}`}
       />
 
@@ -110,12 +116,12 @@ export function TaskItem({
           onChange={(e) => setEditValue(e.target.value)}
           onBlur={handleSaveRename}
           onKeyDown={handleKeyDown}
-          className="flex-1 min-w-0 px-2 py-1 text-sm bg-background border border-primary/30 rounded text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          className="flex-1 min-w-0 px-3 py-2 text-base bg-background border border-primary/40 rounded-lg text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-transparent transition-all duration-200"
         />
       ) : (
         <div
           onDoubleClick={() => setIsEditing(true)}
-          className={`flex-1 min-w-0 text-sm cursor-text select-none ${
+          className={`flex-1 min-w-0 text-base cursor-text select-none transition-all duration-200 ${
             task.completed
               ? 'line-through text-muted-foreground'
               : 'text-foreground'
@@ -126,22 +132,26 @@ export function TaskItem({
         </div>
       )}
 
-      {/* Metadata: priority, due date */}
-      <div className="flex items-center gap-2 shrink-0 opacity-60 group-hover:opacity-100 transition-opacity">
+      {/* Metadata: priority, due date - right aligned */}
+      <div className="flex items-center gap-3 shrink-0 ml-4">
+        {/* Priority badge */}
         <span
-          className="text-xs"
+          className={`text-xs font-medium px-2.5 py-1 rounded-md transition-all duration-200 ${
+            priorityColors[task.priority as keyof typeof priorityColors]
+          } opacity-70 group-hover:opacity-100`}
           title={`Priority: ${task.priority}`}
           aria-label={`Priority: ${task.priority}`}
         >
-          {priorityDots[task.priority as keyof typeof priorityDots]}
+          {task.priority}
         </span>
 
+        {/* Due date */}
         {dueText && (
           <span
-            className={`text-xs font-medium ${
+            className={`text-xs font-medium px-2.5 py-1 rounded-md transition-all duration-200 opacity-70 group-hover:opacity-100 ${
               isOverdue
-                ? 'text-destructive'
-                : 'text-muted-foreground'
+                ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                : 'bg-muted text-muted-foreground'
             }`}
           >
             {dueText}
@@ -153,11 +163,11 @@ export function TaskItem({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button
-            className="px-1 py-0.5 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-all rounded hover:bg-muted disabled:opacity-50"
+            className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 opacity-0 group-hover:opacity-100 transition-all rounded-lg disabled:opacity-50"
             aria-label={`Actions for task "${task.title}"`}
             disabled={isDeleting}
           >
-            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
               <circle cx="6" cy="12" r="1.5" />
               <circle cx="12" cy="12" r="1.5" />
               <circle cx="18" cy="12" r="1.5" />

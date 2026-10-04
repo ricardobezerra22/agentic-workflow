@@ -193,9 +193,9 @@ export function TasksClientRedesigned() {
       />
 
       {/* Main content */}
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-6xl">
         {/* Filter popover */}
-        <div className="relative px-4 sm:px-6">
+        <div className="relative px-6 sm:px-8">
           <FilterPopover
             isOpen={showFilters}
             onClose={() => setShowFilters(false)}
@@ -207,17 +207,19 @@ export function TasksClientRedesigned() {
 
         {/* Inline creator */}
         {showCreator && (
-          <InlineTaskCreator
-            onSubmit={handleCreateTask}
-            onCancel={() => setShowCreator(false)}
-            loading={creatingLoading}
-          />
+          <div className="px-6 sm:px-8 py-4">
+            <InlineTaskCreator
+              onSubmit={handleCreateTask}
+              onCancel={() => setShowCreator(false)}
+              loading={creatingLoading}
+            />
+          </div>
         )}
 
         {/* Task list */}
-        <div className="divide-y divide-border/30">
+        <div className="divide-y divide-border/20">
           {error && (
-            <div className="px-4 py-3 text-sm text-destructive bg-destructive/5 border-b border-destructive/20">
+            <div className="px-6 sm:px-8 py-4 text-sm text-destructive bg-destructive/8 border-b border-destructive/20 rounded-lg mx-6 sm:mx-8 my-4">
               {error}
             </div>
           )}
@@ -235,7 +237,7 @@ export function TasksClientRedesigned() {
 
       {/* Toast notification */}
       {toast && (
-        <div className="fixed bottom-4 left-4 right-4 sm:left-6 sm:right-6 max-w-sm mx-auto z-50">
+        <div className="fixed bottom-6 left-6 right-6 sm:left-8 sm:right-auto max-w-sm z-50">
           <Toast
             message={toast.message}
             type={toast.type}

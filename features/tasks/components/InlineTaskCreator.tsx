@@ -50,8 +50,8 @@ export function InlineTaskCreator({ onSubmit, onCancel, loading = false }: Inlin
   }
 
   return (
-    <div className="bg-muted/30 border-b border-border/30 px-4 py-3 animate-in slide-in-from-top-2 fade-in">
-      <div className="flex items-center gap-3">
+    <div className="bg-muted/20 border-b border-border/20 px-6 py-4 animate-in slide-in-from-top-2 fade-in rounded-lg mx-6 my-4 shadow-notion-sm">
+      <div className="flex items-center gap-4">
         {/* Checkbox (unchecked state) */}
         <div className="h-5 w-5 shrink-0 rounded border-2 border-muted-foreground/30" />
 
@@ -64,7 +64,7 @@ export function InlineTaskCreator({ onSubmit, onCancel, loading = false }: Inlin
           onKeyDown={handleKeyDown}
           disabled={loading}
           placeholder="What needs to be done?"
-          className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:opacity-50"
+          className="flex-1 bg-transparent text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none disabled:opacity-50 transition-colors duration-200"
           aria-label="New task title"
         />
 
@@ -73,7 +73,7 @@ export function InlineTaskCreator({ onSubmit, onCancel, loading = false }: Inlin
           <DropdownMenuTrigger asChild>
             <button
               disabled={loading}
-              className="px-2.5 py-1 text-xs font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-background transition-colors disabled:opacity-50"
+              className="px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-background/50 transition-colors duration-200 disabled:opacity-50"
               title="Set priority"
             >
               {priority.charAt(0).toUpperCase() + priority.slice(1)}
@@ -93,13 +93,13 @@ export function InlineTaskCreator({ onSubmit, onCancel, loading = false }: Inlin
         </DropdownMenu>
 
         {/* Save/Cancel */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 ml-2">
           <Button
             onClick={handleSubmit}
             disabled={!title.trim() || loading}
             size="sm"
             variant="primary"
-            className="px-3 py-1 text-xs"
+            className="px-4 py-2 text-sm font-medium"
           >
             Save
           </Button>
@@ -108,7 +108,7 @@ export function InlineTaskCreator({ onSubmit, onCancel, loading = false }: Inlin
             disabled={loading}
             size="sm"
             variant="ghost"
-            className="px-3 py-1 text-xs"
+            className="px-4 py-2 text-sm"
           >
             Cancel
           </Button>
