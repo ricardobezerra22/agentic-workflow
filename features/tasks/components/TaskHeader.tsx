@@ -25,8 +25,8 @@ export function TaskHeader({
         {/* Title + actions */}
         <div className="flex items-end justify-between pt-10 pb-5">
           <h1
-            className="text-6xl font-bold tracking-tight text-foreground leading-none"
-            style={{ fontFamily: "'Syne', sans-serif", letterSpacing: '-0.04em' }}
+            className="text-8xl font-bold text-foreground leading-none"
+            style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '0.01em' }}
           >
             Tasks
           </h1>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Manrope:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap');
 @import 'tailwindcss';
 
 /* ─── Keyframes ─── */
@@ -32,46 +32,47 @@
   .slide-in-from-bottom-3     { animation: slide-in-from-bottom 0.2s ease-out; }
   .slide-out-to-right         { animation: slide-out-to-right 0.15s ease-out; }
 
-  .shadow-notion-sm  { box-shadow: 0 1px 0 rgb(0 0 0 / 0.4), 0 2px 8px rgb(0 0 0 / 0.4); }
-  .shadow-notion     { box-shadow: 0 1px 3px rgb(0 0 0 / 0.4), 0 4px 16px rgb(0 0 0 / 0.35); }
-  .shadow-notion-md  { box-shadow: 0 4px 20px rgb(0 0 0 / 0.6), 0 16px 48px rgb(0 0 0 / 0.4); }
+  /* Warm, soft shadows for light theme */
+  .shadow-notion-sm  { box-shadow: 0 1px 3px rgb(30 20 10 / 0.07), 0 2px 6px rgb(30 20 10 / 0.05); }
+  .shadow-notion     { box-shadow: 0 2px 8px rgb(30 20 10 / 0.09), 0 6px 20px rgb(30 20 10 / 0.06); }
+  .shadow-notion-md  { box-shadow: 0 8px 24px rgb(30 20 10 / 0.11), 0 20px 48px rgb(30 20 10 / 0.07); }
   .hover-elevate     { transition: box-shadow 0.2s ease-out, transform 0.2s ease-out; }
-  .hover-elevate:hover { box-shadow: 0 8px 24px rgb(0 0 0 / 0.6); transform: translateY(-1px); }
+  .hover-elevate:hover { box-shadow: 0 6px 20px rgb(30 20 10 / 0.14); transform: translateY(-1px); }
 }
 
 /* ─── Design tokens ─── */
 @layer base {
   :root {
     /* RGB channels — required by Tailwind's rgb(var(--x) / alpha) pattern */
-    --background:            13 12 11;
-    --foreground:           240 237 232;
-    --border:                42 40 38;
-    --muted:                 22 21 20;
-    --muted-foreground:     122 119 111;
-    --primary:              240 165 53;   /* amber accent */
-    --primary-foreground:    13 12 11;
-    --secondary:             42 40 38;
-    --secondary-foreground: 240 237 232;
-    --accent:               240 165 53;
-    --accent-foreground:     13 12 11;
-    --destructive:          229 82 82;
-    --destructive-foreground: 240 237 232;
-    --success:               91 214 148;
-    --success-foreground:    13 12 11;
+    --background:            247 244 239;   /* warm ivory paper */
+    --foreground:             28  24  20;   /* deep ink */
+    --border:                226 219 208;   /* warm linen */
+    --muted:                 241 237 230;   /* slightly off-white */
+    --muted-foreground:      136 128 118;   /* warm gray */
+    --primary:               184  52  30;   /* terracotta rust */
+    --primary-foreground:    247 244 239;
+    --secondary:             226 219 208;
+    --secondary-foreground:   28  24  20;
+    --accent:                184  52  30;
+    --accent-foreground:     247 244 239;
+    --destructive:           184  52  30;
+    --destructive-foreground: 247 244 239;
+    --success:                44 116  76;
+    --success-foreground:    247 244 239;
 
-    /* Solid hex values for use outside Tailwind (direct CSS) */
-    --c-bg:       #0d0c0b;
-    --c-fg:       #f0ede8;
-    --c-amber:    #f0a535;
-    --c-danger:   #e55252;
-    --c-border:   #2a2826;
-    --c-muted-fg: #7a776f;
-    --c-surface:  #161514;
+    /* Solid hex values for direct CSS (outside Tailwind) */
+    --c-bg:       #f7f4ef;
+    --c-fg:       #1c1814;
+    --c-amber:    #b8341e;   /* accent — keeps the name for compat with component CSS */
+    --c-danger:   #b8341e;
+    --c-border:   #e2dbd0;
+    --c-muted-fg: #888076;
+    --c-surface:  #ffffff;
 
-    /* Priority indicator colors */
-    --priority-high:   #e55252;
-    --priority-medium: #f0a535;
-    --priority-low:    #4a4845;
+    /* Priority indicator colors — visible on light backgrounds */
+    --priority-high:   #c7342a;
+    --priority-medium: #c47c1a;
+    --priority-low:    #a09890;
   }
 }
 
@@ -87,12 +88,13 @@
     min-height: 100vh;
     background-color: rgb(var(--background) / 1);
     color: rgb(var(--foreground) / 1);
-    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
-  h1 { font-family: 'Syne', sans-serif; @apply text-4xl font-bold tracking-tight; }
-  h2 { font-family: 'Syne', sans-serif; @apply text-2xl font-semibold tracking-tight; }
-  h3 { font-family: 'Syne', sans-serif; @apply text-lg font-semibold; }
+  /* Bebas Neue for display headings */
+  h1 { font-family: 'Bebas Neue', sans-serif; @apply text-4xl font-bold tracking-tight; }
+  h2 { font-family: 'Bebas Neue', sans-serif; @apply text-2xl font-semibold tracking-tight; }
+  h3 { font-family: 'Bebas Neue', sans-serif; @apply text-lg font-semibold; }
 
   button:focus-visible {
     outline: 2px solid var(--c-amber);
@@ -101,7 +103,7 @@
 
   input:focus-visible, textarea:focus-visible, select:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 1px var(--c-amber);
+    box-shadow: 0 0 0 1.5px var(--c-amber);
   }
 
   button, a, input, textarea, select { @apply transition-all duration-150 ease-out; }
@@ -114,7 +116,7 @@
 /* ─── Custom component styles ─── */
 @layer components {
 
-  /* Circular checkbox → amber fill on :checked */
+  /* Circular checkbox → rust fill on :checked */
   .task-checkbox {
     appearance: none;
     width: 1.0625rem;
@@ -127,6 +129,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    background-color: var(--c-bg);
     transition: border-color 0.15s, background-color 0.15s;
   }
   .task-checkbox:hover:not(:disabled)  { border-color: var(--c-amber); }
@@ -154,7 +157,7 @@
     background-color: var(--c-surface);
     border: 1px solid var(--c-border);
     padding: 3px 0;
-    box-shadow: 0 8px 28px rgb(0 0 0 / 0.65);
+    box-shadow: 0 6px 20px rgb(30 20 10 / 0.14), 0 2px 6px rgb(30 20 10 / 0.08);
   }
   .task-menu [role="menuitem"] {
     display: block;
@@ -162,13 +165,13 @@
     text-align: left;
     padding: 7px 14px;
     font-size: 0.8125rem;
-    font-family: 'Manrope', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     color: rgb(var(--foreground) / 1);
     background: transparent;
     border: none;
     cursor: pointer;
   }
-  .task-menu [role="menuitem"]:hover      { background-color: rgb(var(--border) / 1); }
+  .task-menu [role="menuitem"]:hover      { background-color: rgb(var(--muted) / 1); }
   .task-menu [role="menuitem"].danger      { color: var(--c-danger); }
 
   /* Styled native <select> */
@@ -178,12 +181,13 @@
     border: 1px solid var(--c-border);
     padding: 5px 24px 5px 10px;
     font-size: 0.75rem;
-    font-family: 'Manrope', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     color: rgb(var(--muted-foreground) / 1);
     cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath fill='%237a776f' d='M0 0l4 5 4-5z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath fill='%23888076' d='M0 0l4 5 4-5z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 9px center;
+    background-color: var(--c-surface);
   }
   .custom-select:hover { border-color: var(--c-muted-fg); color: rgb(var(--foreground) / 1); }
   .custom-select:focus { outline: none; border-color: var(--c-amber); color: rgb(var(--foreground) / 1); }
@@ -198,16 +202,17 @@
     text-transform: uppercase;
     color: var(--c-muted-fg);
     margin-bottom: 6px;
+    font-family: 'DM Sans', sans-serif;
   }
 
-  /* Text input / textarea used in detail drawer */
+  /* Text input / textarea */
   .field-input {
     width: 100%;
     background-color: var(--c-surface);
     border: 1px solid var(--c-border);
     padding: 8px 10px;
     font-size: 0.875rem;
-    font-family: 'Manrope', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     color: rgb(var(--foreground) / 1);
   }
   .field-input::placeholder { color: var(--c-muted-fg); }
@@ -220,7 +225,7 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    font-family: 'Manrope', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     background-color: var(--c-amber);
     color: var(--c-bg);
     border: 1px solid transparent;
@@ -233,7 +238,7 @@
   .btn-ghost {
     padding: 7px 14px;
     font-size: 0.6875rem;
-    font-family: 'Manrope', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     background: transparent;
     color: var(--c-muted-fg);
     border: 1px solid transparent;
@@ -246,7 +251,7 @@
   .btn-danger {
     padding: 0;
     font-size: 0.8125rem;
-    font-family: 'Manrope', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     background: transparent;
     color: var(--c-danger);
     border: none;

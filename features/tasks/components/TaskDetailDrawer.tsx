@@ -89,7 +89,7 @@ export function TaskDetailDrawer({ task, onClose, onSave, onDelete }: TaskDetail
             <h2
               id={titleId}
               className="text-xs font-bold uppercase tracking-widest text-muted-foreground"
-              style={{ fontFamily: "'Syne', sans-serif" }}
+              style={{ fontFamily: "'Bebas Neue', sans-serif" }}
             >
               Task Detail
             </h2>
