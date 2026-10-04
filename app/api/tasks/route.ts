@@ -34,6 +34,13 @@ export async function GET(req: NextRequest) {
       ]
     }
 
+    // Handle recurringOnly filter
+    const recurringOnly = searchParams.get('recurringOnly') === 'true'
+    if (recurringOnly) {
+      where.recurrencePattern = { not: 'NONE' }
+      where.dueDate = new Date(new Date().toDateString() + 'T00:00:00Z')
+    }
+
     const tasks = await prisma.task.findMany({
       where,
       orderBy: [
@@ -60,12 +67,16 @@ export async function POST(req: NextRequest) {
       return errorResponse('VALIDATION_ERROR', 'Invalid task data', validation.errors)
     }
 
+    const recurrencePattern = (body.recurrencePattern || 'NONE') as string
+
     const task = await prisma.task.create({
       data: {
         title: (body.title as string).trim(),
         description: body.description,
         priority: (body.priority?.toLowerCase() || 'medium') as 'low' | 'medium' | 'high',
         dueDate: body.dueDate ? new Date(body.dueDate) : undefined,
+        recurrencePattern: recurrencePattern as any,
+        recurrenceEndDate: body.recurrenceEndDate ? new Date(body.recurrenceEndDate) : undefined,
       },
     })
 

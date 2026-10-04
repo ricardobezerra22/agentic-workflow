@@ -4,7 +4,6 @@ import {
   isRecurrenceEndDatePassed,
   getRecurrenceDisplayLabel,
 } from './recurrence'
-import type { RecurrencePattern } from '@prisma/client'
 
 describe('recurrence utilities', () => {
   describe('calculateNextDueDate', () => {
