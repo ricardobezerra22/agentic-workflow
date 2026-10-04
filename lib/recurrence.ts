@@ -17,14 +17,14 @@ export function calculateNextDueDate(
       return next
     case 'MONTHLY': {
       const originalDay = currentDate.getDate()
-      next.setMonth(next.getMonth() + 1)
-      // Handle month-end: if original day > days in new month, set to last day of month
-      const daysInNewMonth = new Date(next.getFullYear(), next.getMonth() + 1, 0).getDate()
-      if (originalDay > daysInNewMonth) {
-        next.setDate(daysInNewMonth)
-      } else {
-        next.setDate(originalDay)
-      }
+      const y = currentDate.getFullYear()
+      const m = currentDate.getMonth()
+      const nextYear = m === 11 ? y + 1 : y
+      const nextMonth = (m + 1) % 12
+      // Last day of next month (day 0 of month+2 = last day of month+1)
+      const lastDay = new Date(nextYear, nextMonth + 1, 0).getDate()
+      // setFullYear avoids JS auto-overflow that occurs when setMonth is called on day 31
+      next.setFullYear(nextYear, nextMonth, Math.min(originalDay, lastDay))
       return next
     }
     default:

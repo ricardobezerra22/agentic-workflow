@@ -8,7 +8,9 @@ export default defineConfig({
     },
   },
   test: {
-    include: ["tests/**/*.test.ts", "lib/**/*.test.ts", "!tests/api-routes.integration.test.ts"],
+    include: ["tests/**/*.test.ts", "lib/**/*.test.ts"],
+    exclude: ["tests/e2e/**", "tests/api-routes.integration.test.ts", "**/node_modules/**"],
+    globalSetup: ["tests/globalSetup.ts"],
     fileParallelism: false,
     isolate: false,
   },
