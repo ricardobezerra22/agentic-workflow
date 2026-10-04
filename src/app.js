@@ -36,7 +36,18 @@ app.get("/api/health", (_req, res) => res.json({ ok: true }));
 
 app.use("/api/tasks", tasksRouter);
 
+// Serve static files: built frontend (dist/) + legacy public/
+app.use(express.static(join(__dir, "../dist")));
 app.use(express.static(join(__dir, "../public")));
+
+// SPA fallback: serve index.html for non-API routes not matching static files
+app.get("*", (req, res) => {
+  if (req.path.startsWith("/api/")) {
+    res.status(404).json({ error: "API endpoint not found" });
+  } else {
+    res.sendFile(join(__dir, "../dist/index.html"));
+  }
+});
 
 // Global error handler
 // ponytail: eslint no-unused-vars requires the 4-arg signature for Express error handlers

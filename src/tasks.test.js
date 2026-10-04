@@ -431,10 +431,10 @@ describe("dueDate round-trip", () => {
 // Static: GET /
 // ---------------------------------------------------------------------------
 describe("GET /", () => {
-  it("serves HTML with inline <style> and <script>", async () => {
+  it("serves frontend HTML with bundled assets", async () => {
     const res = await request(app).get("/");
     expect(res.status).toBe(200);
-    expect(res.text).toMatch(/<style/);
-    expect(res.text).toMatch(/<script/);
+    expect(res.text).toMatch(/<script[^>]*src=/);
+    expect(res.text).toMatch(/<!doctype html/i);
   });
 });
