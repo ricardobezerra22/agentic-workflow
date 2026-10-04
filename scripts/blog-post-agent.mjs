@@ -29,9 +29,10 @@ export function formatRepoName(repo) {
     .replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
-/** Build the URL-safe post slug. */
+/** Build the URL-safe post slug — includes full UTC timestamp to avoid 409 conflicts. */
 export function buildSlug(repo, date) {
-  return `${repo.split('/').pop()}-${date.toISOString().slice(0, 10)}`
+  const ts = date.toISOString().slice(0, 19).replace(/[T:]/g, '-')
+  return `${repo.split('/').pop()}-${ts}`
 }
 
 /**
@@ -50,12 +51,16 @@ export function buildExcerpt(text, maxLen = 160) {
 /** Build the full POST payload. */
 export function buildPayload({ repoName, slug, content, excerpt, deployedAt }) {
   const date = new Date(deployedAt)
-  const dateStr = date.toLocaleDateString('en-US', {
-    timeZone: 'UTC',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+  const pad = (n) => String(n).padStart(2, '0')
+  const dateStr = [
+    pad(date.getUTCDate()),
+    pad(date.getUTCMonth() + 1),
+    date.getUTCFullYear(),
+  ].join('/') + ' ' + [
+    pad(date.getUTCHours()),
+    pad(date.getUTCMinutes()),
+    pad(date.getUTCSeconds()),
+  ].join(':')
   return {
     title: `${repoName} — What shipped ${dateStr}`,
     slug,

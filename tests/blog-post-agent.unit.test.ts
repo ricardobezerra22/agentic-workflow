@@ -50,14 +50,20 @@ describe('formatRepoName', () => {
 // ─── buildSlug ─────────────────────────────────────────────────────────────────
 
 describe('buildSlug', () => {
-  it('produces repo-YYYY-MM-DD format', () => {
-    const date = new Date('2026-10-04T23:00:00Z')
-    expect(buildSlug('org/agentic-workflow', date)).toBe('agentic-workflow-2026-10-04')
+  it('includes the full UTC timestamp for uniqueness', () => {
+    const date = new Date('2026-10-04T23:40:39Z')
+    expect(buildSlug('org/agentic-workflow', date)).toBe('agentic-workflow-2026-10-04-23-40-39')
   })
 
   it('uses only the repo part, not the org', () => {
-    const date = new Date('2026-01-15T00:00:00Z')
-    expect(buildSlug('someorg/my-app', date)).toBe('my-app-2026-01-15')
+    const date = new Date('2026-01-15T08:05:00Z')
+    expect(buildSlug('someorg/my-app', date)).toBe('my-app-2026-01-15-08-05-00')
+  })
+
+  it('two runs a second apart produce different slugs', () => {
+    const a = new Date('2026-10-04T12:00:00Z')
+    const b = new Date('2026-10-04T12:00:01Z')
+    expect(buildSlug('org/repo', a)).not.toBe(buildSlug('org/repo', b))
   })
 })
 
@@ -113,9 +119,9 @@ describe('buildPayload', () => {
     expect(tags).toEqual([{ name: 'Release', slug: 'release' }])
   })
 
-  it('formats the title with repo name and date', () => {
+  it('formats the title with DD/MM/YYYY HH:MM:SS timestamp', () => {
     const { title } = buildPayload(base)
-    expect(title).toBe('Agentic Workflow — What shipped Oct 4, 2026')
+    expect(title).toBe('Agentic Workflow — What shipped 04/10/2026 23:00:00')
   })
 
   it('passes content and excerpt through unchanged', () => {
