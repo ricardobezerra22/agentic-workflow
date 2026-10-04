@@ -16,10 +16,19 @@ export default [
     },
   },
   {
-    files: ["scripts/**"],
+    files: ["scripts/**", "src/**", "db/**"],
     languageOptions: {
       globals: {
         process: "readonly",
+        Buffer: "readonly",
+        __dirname: "readonly",
+        __filename: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        URL: "readonly",
+        console: "readonly",
       },
     },
   },
