@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
+- **Fixed** fix: Explicitly set outputDirectory in vercel.json for Next.js builds (`ea2dee9`) — 2026-10-04
 - **Fixed** fix: Add prisma generate to build script for Vercel compatibility (`9f46aca`) — 2026-10-04
 - **Fixed** fix: Update ESLint config and lint script for Next.js 16 compatibility (`3b116f4`) — 2026-10-04
 - **Fixed** fix: Resolve TypeScript build errors (remove unused code, fix test helper typing) (`4716b35`) — 2026-10-04
