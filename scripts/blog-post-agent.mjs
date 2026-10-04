@@ -59,7 +59,8 @@ for await (const chunk of stream) {
 }
 
 const trimmed = content.trim();
-const slug = `${repo.split("/").pop()}-${date.toISOString().slice(0, 10)}`;
+const sha = (process.env.GH_SHA ?? Date.now().toString(36)).slice(0, 7);
+const slug = `${repo.split("/").pop()}-${date.toISOString().slice(0, 10)}-${sha}`;
 // first sentence(s) up to 160 chars as excerpt
 const excerpt = trimmed.split(/(?<=[.!?])\s+/).reduce((acc, s) => acc.length < 160 ? `${acc} ${s}`.trim() : acc, "");
 
@@ -81,6 +82,12 @@ const res = await fetch(BLOG_POST_API_URL, {
   body: JSON.stringify(payload),
 });
 
+const contentType = res.headers.get("content-type") ?? "";
+if (!contentType.includes("application/json")) {
+  console.error(`❌ Blog post API returned unexpected content-type "${contentType}" (status ${res.status}). Expected JSON — got HTML or a redirect?`);
+  process.exit(1);
+}
+
 const raw = await res.text();
 
 if (!raw?.trim()) {
@@ -92,7 +99,8 @@ let parsed;
 try {
   parsed = JSON.parse(raw);
 } catch {
-  parsed = raw;
+  console.error(`❌ Blog post API returned non-JSON body (status ${res.status}): ${raw.slice(0, 200)}`);
+  process.exit(1);
 }
 
 if (!res.ok) {
@@ -101,4 +109,4 @@ if (!res.ok) {
   process.exit(1);
 }
 
-console.log(`✅ Blog post published (${res.status}):`, typeof parsed === "object" ? JSON.stringify(parsed) : parsed);
+console.log(`✅ Blog post published (${res.status}):`, JSON.stringify(parsed));
