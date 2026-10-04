@@ -13,7 +13,7 @@ import { OpenRouter } from "@openrouter/sdk";
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 if (!OPENROUTER_API_KEY) { console.error("❌ OPENROUTER_API_KEY not set"); process.exit(1); }
 
-const BLOG_POST_API_URL = process.env.BLOG_POST_API_URL;
+const BLOG_POST_API_URL = process.env.BLOG_POST_API_URL ?? "https://blog-docs-nine.vercel.app/api/posts";
 if (!BLOG_POST_API_URL) { console.error("❌ BLOG_POST_API_URL not set"); process.exit(1); }
 
 const MODEL = process.env.BLOG_POST_MODEL ?? "nvidia/nemotron-3-ultra-550b-a55b:free";
@@ -58,18 +58,18 @@ for await (const chunk of stream) {
   if (text) content += text;
 }
 
+const trimmed = content.trim();
 const slug = `${repo.split("/").pop()}-${date.toISOString().slice(0, 10)}`;
+// first sentence(s) up to 160 chars as excerpt
+const excerpt = trimmed.split(/(?<=[.!?])\s+/).reduce((acc, s) => acc.length < 160 ? `${acc} ${s}`.trim() : acc, "");
+
 const payload = {
   title: `${repoName} — What shipped ${dateStr}`,
   slug,
-  content: content.trim(),
+  content: trimmed,
+  excerpt,
   published: true,
-  sha: process.env.GH_SHA,
-  ref: process.env.GH_REF,
-  actor: process.env.GH_ACTOR,
-  repo,
-  run_url: `https://github.com/${repo}/actions/runs/${process.env.GH_RUN_ID}`,
-  deployed_at: deployedAt,
+  tags: [{ name: "Release", slug: "release" }],
 };
 
 const res = await fetch(BLOG_POST_API_URL, {
@@ -81,6 +81,24 @@ const res = await fetch(BLOG_POST_API_URL, {
   body: JSON.stringify(payload),
 });
 
-const body = await res.text();
-console.log(`${res.ok ? "✅" : "❌"} Blog post (${res.status}): ${body}`);
-if (!res.ok) process.exit(1);
+const raw = await res.text();
+
+if (!raw?.trim()) {
+  console.error(`❌ Blog post API returned ${res.status} with an empty response body.`);
+  process.exit(1);
+}
+
+let parsed;
+try {
+  parsed = JSON.parse(raw);
+} catch {
+  parsed = raw;
+}
+
+if (!res.ok) {
+  const message = parsed?.error ?? parsed?.message ?? raw;
+  console.error(`❌ Blog post API error ${res.status}: ${message}`);
+  process.exit(1);
+}
+
+console.log(`✅ Blog post published (${res.status}):`, typeof parsed === "object" ? JSON.stringify(parsed) : parsed);
