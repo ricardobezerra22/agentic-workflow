@@ -4,9 +4,9 @@ import { useState, useRef, useEffect } from 'react'
 import type { TaskPriority, CreateTaskInput } from '@/features/tasks/types'
 
 const PRIORITY_COLOR: Record<string, string> = {
-  high:   '#e55252',
-  medium: '#f0a535',
-  low:    '#4a4845',
+  high:   '#FF3B30',
+  medium: '#FF9500',
+  low:    '#8E8E93',
 }
 
 interface InlineTaskCreatorProps {

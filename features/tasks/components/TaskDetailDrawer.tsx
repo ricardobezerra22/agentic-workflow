@@ -89,7 +89,7 @@ export function TaskDetailDrawer({ task, onClose, onSave, onDelete }: TaskDetail
             <h2
               id={titleId}
               className="text-xs font-bold uppercase tracking-widest text-muted-foreground"
-              style={{ fontFamily: "'Bebas Neue', sans-serif" }}
+              style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" }}
             >
               Task Detail
             </h2>

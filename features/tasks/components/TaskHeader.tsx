@@ -25,8 +25,8 @@ export function TaskHeader({
         {/* Title + actions */}
         <div className="flex items-end justify-between pt-10 pb-5">
           <h1
-            className="text-8xl font-bold text-foreground leading-none"
-            style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '0.01em' }}
+            className="text-5xl font-semibold text-foreground leading-none tracking-tight"
+            style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif" }}
           >
             Tasks
           </h1>
@@ -34,7 +34,7 @@ export function TaskHeader({
           <div className="flex items-center gap-2 pb-1">
             <button
               onClick={onNewTask}
-              className="px-4 py-2 text-xs font-bold uppercase tracking-widest border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+              className="px-4 py-2 text-sm font-semibold rounded-[10px] bg-primary text-primary-foreground hover:brightness-95 transition-all"
               aria-label="Create new task"
               title="Press N to create new task"
             >
@@ -43,10 +43,10 @@ export function TaskHeader({
 
             <button
               onClick={onFilterToggle}
-              className={`px-4 py-2 text-xs font-bold uppercase tracking-widest border transition-colors ${
+              className={`px-4 py-2 text-sm font-semibold rounded-[10px] border transition-all ${
                 hasActiveFilters
-                  ? 'border-primary text-primary'
-                  : 'border-border text-muted-foreground hover:border-muted-foreground hover:text-foreground'
+                  ? 'border-primary/50 bg-primary/15 text-foreground'
+                  : 'border-border text-muted-foreground hover:bg-muted hover:text-foreground'
               }`}
               aria-label="Toggle filters"
             >
@@ -64,7 +64,7 @@ export function TaskHeader({
               placeholder="Search tasks..."
               value={searchValue}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full py-2.5 pr-8 text-sm bg-transparent border-0 border-b border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+              className="w-full py-2.5 px-4 pr-10 text-sm bg-muted rounded-[10px] border-0 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
               aria-label="Search tasks"
               title="Press Cmd/Ctrl+K to focus"
             />

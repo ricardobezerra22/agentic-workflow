@@ -13,9 +13,9 @@ interface TaskItemProps {
 }
 
 const PRIORITY_COLOR: Record<string, string> = {
-  high:   '#e55252',
-  medium: '#f0a535',
-  low:    '#4a4845',
+  high:   '#FF3B30',   /* iOS red */
+  medium: '#FF9500',   /* iOS orange */
+  low:    '#8E8E93',   /* iOS gray */
 }
 
 export function TaskItem({
@@ -96,11 +96,11 @@ export function TaskItem({
         }
       }}
       className={[
-        'group flex items-center gap-3 px-6 sm:px-8 py-3.5 border-b border-border/40 transition-colors',
+        'group flex items-center gap-3 px-4 sm:px-6 py-3.5 border-b border-border/50 transition-colors bg-muted',
         task.completed ? 'opacity-55' : '',
         isDeleting ? 'animate-out slide-out-to-right fade-out' : 'animate-in',
         onOpen ? 'cursor-pointer' : '',
-        'hover:bg-muted/40',
+        'hover:bg-background/60',
       ].join(' ')}
     >
       {/* Priority strip — thin vertical accent */}

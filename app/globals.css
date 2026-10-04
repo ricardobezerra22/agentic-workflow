@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap');
 @import 'tailwindcss';
 
 /* ─── Keyframes ─── */
@@ -21,58 +20,58 @@
 
 /* ─── Animation utilities ─── */
 @layer utilities {
-  .slide-in-from-right        { @media (prefers-reduced-motion: no-preference) { animation: slide-in-from-right 0.22s cubic-bezier(0.16,1,0.3,1); } }
+  .slide-in-from-right        { @media (prefers-reduced-motion: no-preference) { animation: slide-in-from-right 0.28s cubic-bezier(0.16,1,0.3,1); } }
   .animate-in                 { animation: fade-in 0.2s ease-out; }
   .animate-out                { animation: fade-out 0.15s ease-out; }
   .fade-in                    { animation: fade-in 0.2s ease-out; }
   .fade-out                   { animation: fade-out 0.15s ease-out; }
   .zoom-in-95                 { animation: zoom-in 0.2s ease-out; }
   .slide-in-from-top-2        { animation: slide-in-from-top 0.2s ease-out; }
-  .slide-in-from-bottom-2     { animation: slide-in-from-bottom 0.2s ease-out; }
-  .slide-in-from-bottom-3     { animation: slide-in-from-bottom 0.2s ease-out; }
+  .slide-in-from-bottom-2     { animation: slide-in-from-bottom 0.25s cubic-bezier(0.16,1,0.3,1); }
+  .slide-in-from-bottom-3     { animation: slide-in-from-bottom 0.25s cubic-bezier(0.16,1,0.3,1); }
   .slide-out-to-right         { animation: slide-out-to-right 0.15s ease-out; }
 
-  /* Warm, soft shadows for light theme */
-  .shadow-notion-sm  { box-shadow: 0 1px 3px rgb(30 20 10 / 0.07), 0 2px 6px rgb(30 20 10 / 0.05); }
-  .shadow-notion     { box-shadow: 0 2px 8px rgb(30 20 10 / 0.09), 0 6px 20px rgb(30 20 10 / 0.06); }
-  .shadow-notion-md  { box-shadow: 0 8px 24px rgb(30 20 10 / 0.11), 0 20px 48px rgb(30 20 10 / 0.07); }
+  /* iOS-style subtle shadows */
+  .shadow-notion-sm  { box-shadow: 0 1px 3px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.04); }
+  .shadow-notion     { box-shadow: 0 2px 10px rgb(0 0 0 / 0.08), 0 1px 3px rgb(0 0 0 / 0.05); }
+  .shadow-notion-md  { box-shadow: 0 8px 30px rgb(0 0 0 / 0.12), 0 2px 8px rgb(0 0 0 / 0.06); }
   .hover-elevate     { transition: box-shadow 0.2s ease-out, transform 0.2s ease-out; }
-  .hover-elevate:hover { box-shadow: 0 6px 20px rgb(30 20 10 / 0.14); transform: translateY(-1px); }
+  .hover-elevate:hover { box-shadow: 0 4px 16px rgb(0 0 0 / 0.12); transform: translateY(-1px); }
 }
 
-/* ─── Design tokens ─── */
+/* ─── Design tokens — iOS Notes system ─── */
 @layer base {
   :root {
-    /* RGB channels — required by Tailwind's rgb(var(--x) / alpha) pattern */
-    --background:            247 244 239;   /* warm ivory paper */
-    --foreground:             28  24  20;   /* deep ink */
-    --border:                226 219 208;   /* warm linen */
-    --muted:                 241 237 230;   /* slightly off-white */
-    --muted-foreground:      136 128 118;   /* warm gray */
-    --primary:               184  52  30;   /* terracotta rust */
-    --primary-foreground:    247 244 239;
-    --secondary:             226 219 208;
-    --secondary-foreground:   28  24  20;
-    --accent:                184  52  30;
-    --accent-foreground:     247 244 239;
-    --destructive:           184  52  30;
-    --destructive-foreground: 247 244 239;
-    --success:                44 116  76;
-    --success-foreground:    247 244 239;
+    /* RGB channels for Tailwind rgb(var(--x) / alpha) */
+    --background:            242 242 247;   /* iOS systemGroupedBackground #F2F2F7 */
+    --foreground:             28  28  30;   /* iOS label #1C1C1E */
+    --border:                198 198 200;   /* iOS separator #C6C6C8 */
+    --muted:                 255 255 255;   /* iOS secondarySystemGroupedBackground (white cards) */
+    --muted-foreground:      142 142 147;   /* iOS secondaryLabel #8E8E93 */
+    --primary:               255 214  10;   /* iOS Notes yellow #FFD60A */
+    --primary-foreground:     28  28  30;   /* dark text on yellow — 13:1 contrast */
+    --secondary:             242 242 247;
+    --secondary-foreground:   28  28  30;
+    --accent:                255 214  10;
+    --accent-foreground:      28  28  30;
+    --destructive:           255  59  48;   /* iOS red #FF3B30 */
+    --destructive-foreground: 255 255 255;
+    --success:                52 199  89;   /* iOS green #34C759 */
+    --success-foreground:    255 255 255;
 
-    /* Solid hex values for direct CSS (outside Tailwind) */
-    --c-bg:       #f7f4ef;
-    --c-fg:       #1c1814;
-    --c-amber:    #b8341e;   /* accent — keeps the name for compat with component CSS */
-    --c-danger:   #b8341e;
-    --c-border:   #e2dbd0;
-    --c-muted-fg: #888076;
-    --c-surface:  #ffffff;
+    /* Solid hex values for direct CSS */
+    --c-bg:       #F2F2F7;
+    --c-fg:       #1C1C1E;
+    --c-amber:    #FFD60A;   /* Notes yellow — name kept for component compat */
+    --c-danger:   #FF3B30;
+    --c-border:   #C6C6C8;
+    --c-muted-fg: #8E8E93;
+    --c-surface:  #FFFFFF;
 
-    /* Priority indicator colors — visible on light backgrounds */
-    --priority-high:   #c7342a;
-    --priority-medium: #c47c1a;
-    --priority-low:    #a09890;
+    /* iOS semantic priority colors */
+    --priority-high:   #FF3B30;   /* iOS red */
+    --priority-medium: #FF9500;   /* iOS orange */
+    --priority-low:    #8E8E93;   /* iOS gray */
   }
 }
 
@@ -88,13 +87,23 @@
     min-height: 100vh;
     background-color: rgb(var(--background) / 1);
     color: rgb(var(--foreground) / 1);
-    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* SF Pro on Apple, Segoe on Windows — no external font needed */
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
   }
 
-  /* Bebas Neue for display headings */
-  h1 { font-family: 'Bebas Neue', sans-serif; @apply text-4xl font-bold tracking-tight; }
-  h2 { font-family: 'Bebas Neue', sans-serif; @apply text-2xl font-semibold tracking-tight; }
-  h3 { font-family: 'Bebas Neue', sans-serif; @apply text-lg font-semibold; }
+  /* Large title style — SF Pro Display */
+  h1 {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    @apply text-4xl font-semibold tracking-tight;
+  }
+  h2 {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    @apply text-2xl font-semibold tracking-tight;
+  }
+  h3 {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    @apply text-lg font-semibold;
+  }
 
   button:focus-visible {
     outline: 2px solid var(--c-amber);
@@ -103,7 +112,7 @@
 
   input:focus-visible, textarea:focus-visible, select:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 1.5px var(--c-amber);
+    box-shadow: 0 0 0 3px rgb(var(--primary) / 0.35);
   }
 
   button, a, input, textarea, select { @apply transition-all duration-150 ease-out; }
@@ -116,11 +125,11 @@
 /* ─── Custom component styles ─── */
 @layer components {
 
-  /* Circular checkbox → rust fill on :checked */
+  /* Circular checkbox → yellow fill on :checked */
   .task-checkbox {
     appearance: none;
-    width: 1.0625rem;
-    height: 1.0625rem;
+    width: 1.125rem;
+    height: 1.125rem;
     border: 1.5px solid var(--c-border);
     border-radius: 50%;
     cursor: pointer;
@@ -129,7 +138,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--c-bg);
+    background-color: var(--c-surface);
     transition: border-color 0.15s, background-color 0.15s;
   }
   .task-checkbox:hover:not(:disabled)  { border-color: var(--c-amber); }
@@ -139,7 +148,7 @@
     display: block;
     width: 4px;
     height: 7px;
-    border: 1.5px solid var(--c-bg);
+    border: 1.5px solid var(--c-fg);
     border-top: none;
     border-left: none;
     transform: rotate(45deg) translateY(-1px);
@@ -147,116 +156,124 @@
   }
   .task-checkbox:disabled { opacity: 0.35; cursor: not-allowed; }
 
-  /* Floating action menu */
+  /* iOS-style action sheet menu */
   .task-menu {
     position: absolute;
     right: 0;
-    top: calc(100% + 4px);
+    top: calc(100% + 6px);
     z-index: 100;
-    min-width: 9rem;
-    background-color: var(--c-surface);
+    min-width: 10rem;
+    background-color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--c-border);
-    padding: 3px 0;
-    box-shadow: 0 6px 20px rgb(30 20 10 / 0.14), 0 2px 6px rgb(30 20 10 / 0.08);
+    border-radius: 13px;
+    padding: 4px 0;
+    box-shadow: 0 4px 24px rgb(0 0 0 / 0.14), 0 1px 4px rgb(0 0 0 / 0.08);
+    overflow: hidden;
   }
   .task-menu [role="menuitem"] {
     display: block;
     width: 100%;
     text-align: left;
-    padding: 7px 14px;
-    font-size: 0.8125rem;
-    font-family: 'DM Sans', sans-serif;
+    padding: 10px 16px;
+    font-size: 0.875rem;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     color: rgb(var(--foreground) / 1);
     background: transparent;
     border: none;
     cursor: pointer;
   }
-  .task-menu [role="menuitem"]:hover      { background-color: rgb(var(--muted) / 1); }
-  .task-menu [role="menuitem"].danger      { color: var(--c-danger); }
+  .task-menu [role="menuitem"]:not(:last-child) {
+    border-bottom: 0.5px solid var(--c-border);
+  }
+  .task-menu [role="menuitem"]:hover { background-color: rgb(var(--background) / 0.6); }
+  .task-menu [role="menuitem"].danger { color: var(--c-danger); font-weight: 500; }
 
-  /* Styled native <select> */
+  /* Styled native <select> — iOS form field style */
   .custom-select {
     appearance: none;
-    background-color: transparent;
-    border: 1px solid var(--c-border);
-    padding: 5px 24px 5px 10px;
-    font-size: 0.75rem;
-    font-family: 'DM Sans', sans-serif;
-    color: rgb(var(--muted-foreground) / 1);
-    cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath fill='%23888076' d='M0 0l4 5 4-5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 9px center;
     background-color: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: 10px;
+    padding: 7px 26px 7px 12px;
+    font-size: 0.875rem;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    color: rgb(var(--foreground) / 1);
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%238E8E93' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
   }
-  .custom-select:hover { border-color: var(--c-muted-fg); color: rgb(var(--foreground) / 1); }
-  .custom-select:focus { outline: none; border-color: var(--c-amber); color: rgb(var(--foreground) / 1); }
-  .custom-select option { background-color: var(--c-surface); color: rgb(var(--foreground) / 1); }
+  .custom-select:focus { outline: none; border-color: var(--c-amber); box-shadow: 0 0 0 3px rgb(255 214 10 / 0.25); }
+  .custom-select option { background-color: var(--c-surface); }
 
   /* Form field label */
   .field-label {
     display: block;
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--c-muted-fg);
     margin-bottom: 6px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
-  /* Text input / textarea */
+  /* Text input / textarea — iOS text field style */
   .field-input {
     width: 100%;
     background-color: var(--c-surface);
     border: 1px solid var(--c-border);
-    padding: 8px 10px;
-    font-size: 0.875rem;
-    font-family: 'DM Sans', sans-serif;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 0.9375rem;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     color: rgb(var(--foreground) / 1);
   }
   .field-input::placeholder { color: var(--c-muted-fg); }
-  .field-input:focus        { outline: none; border-color: var(--c-amber); }
+  .field-input:focus { outline: none; border-color: var(--c-amber); box-shadow: 0 0 0 3px rgb(255 214 10 / 0.25); }
 
-  /* Primary CTA */
+  /* Primary CTA — Notes yellow pill */
   .btn-primary {
-    padding: 7px 18px;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-family: 'DM Sans', sans-serif;
+    padding: 8px 18px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: var(--c-amber);
-    color: var(--c-bg);
-    border: 1px solid transparent;
+    color: var(--c-fg);
+    border: none;
+    border-radius: 10px;
     cursor: pointer;
   }
-  .btn-primary:hover:not(:disabled) { opacity: 0.88; }
-  .btn-primary:disabled              { opacity: 0.35; cursor: not-allowed; }
+  .btn-primary:hover:not(:disabled) { filter: brightness(0.94); }
+  .btn-primary:active:not(:disabled) { filter: brightness(0.88); }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
 
   /* Ghost / secondary */
   .btn-ghost {
-    padding: 7px 14px;
-    font-size: 0.6875rem;
-    font-family: 'DM Sans', sans-serif;
+    padding: 8px 14px;
+    font-size: 0.875rem;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     background: transparent;
     color: var(--c-muted-fg);
-    border: 1px solid transparent;
+    border: none;
+    border-radius: 10px;
     cursor: pointer;
   }
-  .btn-ghost:hover:not(:disabled) { color: rgb(var(--foreground) / 1); }
-  .btn-ghost:disabled              { opacity: 0.35; cursor: not-allowed; }
+  .btn-ghost:hover:not(:disabled) { background-color: rgb(var(--border) / 0.5); color: rgb(var(--foreground) / 1); }
+  .btn-ghost:disabled { opacity: 0.35; cursor: not-allowed; }
 
   /* Danger text button */
   .btn-danger {
     padding: 0;
-    font-size: 0.8125rem;
-    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     background: transparent;
     color: var(--c-danger);
     border: none;
     cursor: pointer;
   }
   .btn-danger:hover:not(:disabled) { opacity: 0.75; }
-  .btn-danger:disabled              { opacity: 0.35; cursor: not-allowed; }
+  .btn-danger:disabled { opacity: 0.35; cursor: not-allowed; }
 }
