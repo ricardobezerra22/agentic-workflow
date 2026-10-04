@@ -5,7 +5,6 @@ import {
   buildSlug,
   buildExcerpt,
   buildPayload,
-  // @ts-expect-error — .mjs has no type declarations
 } from '../scripts/blog-post-agent.mjs'
 
 // ─── parseChangelog ────────────────────────────────────────────────────────────
