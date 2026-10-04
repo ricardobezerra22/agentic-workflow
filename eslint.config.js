@@ -1,7 +1,7 @@
 import js from "@eslint/js";
 
 export default [
-  { ignores: ["dist/**", "node_modules/**", "openspec/**", ".claude/**"] },
+  { ignores: ["dist/**", "node_modules/**", "openspec/**", ".claude/**", ".next/**", "build/**"] },
   js.configs.recommended,
   {
     languageOptions: {
@@ -16,20 +16,21 @@ export default [
     },
   },
   {
-    files: ["scripts/**", "src/**", "db/**"],
+    files: ["app/**", "components/**", "features/**", "lib/**"],
+    languageOptions: {
+      globals: {
+        React: "readonly",
+      },
+    },
+  },
+  {
+    files: ["scripts/**", "vitest.config.js"],
     languageOptions: {
       globals: {
         process: "readonly",
-        Buffer: "readonly",
-        __dirname: "readonly",
-        __filename: "readonly",
-        setInterval: "readonly",
-        clearInterval: "readonly",
-        setTimeout: "readonly",
-        clearTimeout: "readonly",
-        URL: "readonly",
-        console: "readonly",
         fetch: "readonly",
+        console: "readonly",
+        __dirname: "readonly",
       },
     },
   },
