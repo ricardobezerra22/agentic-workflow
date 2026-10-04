@@ -4,9 +4,10 @@ import { dirname, join } from "node:path";
 import pg from "pg";
 import "dotenv/config";
 
-const pool = new pg.Pool({
-  connectionString: process.env.DATABASE_URL || "postgres://localhost:5432/todo",
-});
+const url = process.env.DATABASE_URL;
+if (!url) throw new Error("DATABASE_URL is not set");
+
+const pool = new pg.Pool({ connectionString: url });
 
 const dir = dirname(fileURLToPath(import.meta.url));
 const sql = await readFile(join(dir, "schema.sql"), "utf8");
