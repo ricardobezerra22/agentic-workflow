@@ -70,7 +70,7 @@ export async function PATCH(
       updateData.description = body.description
     }
     if ('priority' in body && body.priority !== undefined) {
-      updateData.priority = (body.priority as string).toUpperCase()
+      updateData.priority = (body.priority as string).toLowerCase()
     }
     if ('dueDate' in body && body.dueDate !== undefined) {
       updateData.dueDate = body.dueDate

@@ -22,10 +22,10 @@ describe('Tasks API Routes Integration', () => {
 
     it('should return all tasks with correct fields', async () => {
       await prisma.task.create({
-        data: { title: 'Task 1', priority: 'HIGH' },
+        data: { title: 'Task 1', priority: 'high' },
       })
       await prisma.task.create({
-        data: { title: 'Task 2', priority: 'LOW' },
+        data: { title: 'Task 2', priority: 'low' },
       })
 
       const tasks = await prisma.task.findMany()
@@ -46,7 +46,7 @@ describe('Tasks API Routes Integration', () => {
       const task = await prisma.task.create({
         data: {
           title: 'New task',
-          priority: 'MEDIUM',
+          priority: 'medium',
         },
       })
 
@@ -61,7 +61,7 @@ describe('Tasks API Routes Integration', () => {
         data: {
           title: 'Complete task',
           description: 'Full details',
-          priority: 'HIGH',
+          priority: 'high',
           dueDate,
         },
       })
@@ -75,7 +75,7 @@ describe('Tasks API Routes Integration', () => {
   describe('PATCH /api/tasks/:id', () => {
     it('should update task title', async () => {
       const created = await prisma.task.create({
-        data: { title: 'Original', priority: 'MEDIUM' },
+        data: { title: 'Original', priority: 'medium' },
       })
 
       const updated = await prisma.task.update({
@@ -88,7 +88,7 @@ describe('Tasks API Routes Integration', () => {
 
     it('should mark task as completed with timestamp', async () => {
       const created = await prisma.task.create({
-        data: { title: 'Task', priority: 'LOW' },
+        data: { title: 'Task', priority: 'low' },
       })
 
       const updated = await prisma.task.update({
@@ -107,7 +107,7 @@ describe('Tasks API Routes Integration', () => {
       const created = await prisma.task.create({
         data: {
           title: 'Task',
-          priority: 'MEDIUM',
+          priority: 'medium',
           completed: true,
           completedAt: new Date(),
         },
@@ -129,7 +129,7 @@ describe('Tasks API Routes Integration', () => {
   describe('DELETE /api/tasks/:id', () => {
     it('should delete a task', async () => {
       const created = await prisma.task.create({
-        data: { title: 'Delete me', priority: 'LOW' },
+        data: { title: 'Delete me', priority: 'low' },
       })
 
       await prisma.task.delete({
@@ -145,7 +145,7 @@ describe('Tasks API Routes Integration', () => {
 
     it('should not find deleted task in list', async () => {
       const created = await prisma.task.create({
-        data: { title: 'Temporary', priority: 'HIGH' },
+        data: { title: 'Temporary', priority: 'high' },
       })
 
       await prisma.task.delete({

@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     if (status === 'open') where.completed = false
     if (status === 'done') where.completed = true
 
-    if (priority) where.priority = priority.toUpperCase()
+    if (priority) where.priority = priority.toLowerCase()
 
     if (q) {
       where.OR = [
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
       data: {
         title: (body.title as string).trim(),
         description: body.description,
-        priority: body.priority?.toUpperCase() || 'MEDIUM',
+        priority: (body.priority?.toLowerCase() || 'medium') as 'low' | 'medium' | 'high',
         dueDate: body.dueDate,
       },
     })

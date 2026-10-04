@@ -31,8 +31,11 @@ export function validateTask(body: unknown): ValidationResult {
     errors.push({ field: 'title', issue: 'max_length_exceeded' })
   }
 
-  if (bodyObj.priority !== undefined && !VALID_PRIORITIES.includes(bodyObj.priority as Priority)) {
-    errors.push({ field: 'priority', issue: 'invalid_value' })
+  if (bodyObj.priority !== undefined) {
+    const priorityLower = (bodyObj.priority as string).toLowerCase()
+    if (!VALID_PRIORITIES.includes(priorityLower as Priority)) {
+      errors.push({ field: 'priority', issue: 'invalid_value' })
+    }
   }
 
   if (bodyObj.dueDate !== undefined && bodyObj.dueDate !== null) {
@@ -71,11 +74,11 @@ export function validateListParams(query: unknown): ValidationResult {
     errors.push({ field: 'status', issue: 'invalid_value' })
   }
 
-  if (
-    queryObj.priority !== undefined &&
-    !VALID_PRIORITIES.includes(queryObj.priority as Priority)
-  ) {
-    errors.push({ field: 'priority', issue: 'invalid_value' })
+  if (queryObj.priority !== undefined) {
+    const priorityLower = (queryObj.priority as string).toLowerCase()
+    if (!VALID_PRIORITIES.includes(priorityLower as Priority)) {
+      errors.push({ field: 'priority', issue: 'invalid_value' })
+    }
   }
 
   return { valid: errors.length === 0, errors }
