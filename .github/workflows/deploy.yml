@@ -45,6 +45,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Setup test database
+        env:
+          DATABASE_URL: postgres://todo:todo@localhost:5432/todo_test
+        run: npx prisma db push --skip-generate --accept-data-loss
       - name: Test
         env:
           TEST_DATABASE_URL: postgres://todo:todo@localhost:5432/todo_test
@@ -95,6 +99,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
+      - name: Setup test database
+        env:
+          DATABASE_URL: postgres://todo:todo@localhost:5432/todo_test
+        run: npx prisma db push --skip-generate --accept-data-loss
       - name: Test
         env:
           TEST_DATABASE_URL: postgres://todo:todo@localhost:5432/todo_test
