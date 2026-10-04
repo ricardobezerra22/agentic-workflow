@@ -170,7 +170,7 @@ describe('Tasks API Integration', () => {
       expect(task.title).toBe('')
     })
 
-    it('should set default priority to MEDIUM', async () => {
+    it('should set default priority to medium', async () => {
       const task = await prisma.task.create({
         data: {
           title: 'No priority specified',
@@ -178,7 +178,7 @@ describe('Tasks API Integration', () => {
         },
       })
 
-      expect(task.priority).toBe('MEDIUM')
+      expect(task.priority).toBe('medium')
     })
 
     it('should handle long titles', async () => {

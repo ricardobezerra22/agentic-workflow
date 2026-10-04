@@ -9,5 +9,7 @@ export default defineConfig({
   },
   test: {
     include: ["src/**/*.test.{js,ts}", "src/**/*.integration.test.{js,ts}", "tests/**/*.e2e.test.js"],
+    threads: false,
+    isolate: false,
   },
 });
